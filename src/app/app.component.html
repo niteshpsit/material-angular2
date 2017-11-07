@@ -69,12 +69,6 @@
 <div class="example-container">
   <table class="example-full-width" cellspacing="0">
     <tr class="space"></tr>
-    <tr>
-        <button class="floatright" mat-raised-button color="primary" (click)="onAddNewReleaase($event)"> {{ isNewRelease ?  'Hide' : 'Add New Release' }}</button>
-        <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)"> Reset </button>
-        <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> Submit </button>
-    </tr>
-    <tr class="space"></tr>
     <tr *ngIf="isNewRelease">
     <td>
       <mat-form-field>
@@ -102,6 +96,13 @@
     </td>
     <td>
       <mat-form-field>
+        <input matInput [matDatepicker]="planDate" placeholder="Plan Date" [(ngModel)]="release.planDate">
+        <mat-datepicker-toggle matSuffix [for]="planDate"></mat-datepicker-toggle>
+        <mat-datepicker #planDate></mat-datepicker>
+      </mat-form-field>
+    </td>
+    <td>
+      <mat-form-field>
         <input matInput placeholder="Version" [(ngModel)]="release.version">
       </mat-form-field>
     </td>
@@ -110,13 +111,6 @@
         <input matInput [matDatepicker]="actDate" placeholder="Actual Date" [(ngModel)]="release.actDate">
         <mat-datepicker-toggle matSuffix [for]="actDate" ></mat-datepicker-toggle>
         <mat-datepicker #actDate></mat-datepicker>
-      </mat-form-field>
-    </td>
-    <td>
-      <mat-form-field>
-        <input matInput [matDatepicker]="planDate" placeholder="Plan Date" [(ngModel)]="release.planDate">
-        <mat-datepicker-toggle matSuffix [for]="planDate"></mat-datepicker-toggle>
-        <mat-datepicker #planDate></mat-datepicker>
       </mat-form-field>
     </td>
 
@@ -129,6 +123,11 @@
         </mat-select>
       </mat-form-field>
     </td>
+  </tr>
+  <tr>
+      <button class="floatright" mat-raised-button color="primary" (click)="onAddNewReleaase($event)"> {{ isNewRelease ?  'Hide' : 'Add New Release' }}</button>
+      <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)"> Reset </button>
+      <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> Submit </button>
   </tr></table>
 </div>
 
