@@ -25,10 +25,16 @@ export class ReleaseService {
         return this.http.get(this.dropURL).toPromise()
     }
     addRelease(release: any): Promise<any> {
-        delete release.id
+        delete release.id;
+        delete release.actDate;
+        delete release.status;
         return this.http.post(this.postURL, release, options).toPromise()
     }
     updateRelease(release: any){
+        if( !release.actDate || release.actDate === "" || release.actDate === null ) 
+            delete release.actDate;
+        if( !release.status || release.status === "" )
+            delete release.status;
         return this.http.post(this.updateReleaseURL, release, options).toPromise()
     }
     deleteRelease(id){

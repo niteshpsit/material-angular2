@@ -1,9 +1,11 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit, Inject  } from '@angular/core';
 import { ReleaseService } from './services/release.service';
 import {DataSource} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatIconRegistry} from '@angular/material';
+import {MatDialog} from '@angular/material';
+import { ConfirmDialog } from './component/confirmDialog.component'
 import 'rxjs/add/observable/of';
 
 @Component({
@@ -23,7 +25,12 @@ export class AppComponent implements OnInit  {
   deliveryList:any= [];
   loading:boolean = false;
   isNewRelease:boolean = false;
-  constructor(private releaseService: ReleaseService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer ) { 
+  constructor(
+    private releaseService: ReleaseService,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    public dialog: MatDialog ) {
+
     iconRegistry.addSvgIcon(
       'clear',
       sanitizer.bypassSecurityTrustResourceUrl('assets/ic_clear_black_24px.svg'));
@@ -42,7 +49,7 @@ export class AppComponent implements OnInit  {
   getDropList(){
     
     this.releaseService.getDropList()
-    .then((res)=>{
+    .then((res: any)=>{
       let data = JSON.parse(res._body);
       data.forEach( (drop) => {
         this.dropList.push({ value: drop.delivery, viewValue: drop.delivery })
@@ -51,7 +58,7 @@ export class AppComponent implements OnInit  {
   }
   getDeliveryList(){
     this.releaseService.getReleaseTypes()
-    .then((res)=>{
+    .then((res: any)=>{
       let data = JSON.parse(res._body);
       data.forEach( (type) => {
         this.deliveryList.push({ value: type.releaseType, viewValue: type.releaseType })
@@ -108,14 +115,25 @@ export class AppComponent implements OnInit  {
     this.release.releaseDrop = ele.releaseDrop
     this.release.deliveryType = ele.deliveryType
     this.release.label = ele.label
-    this.release.actDate = new Date(ele.actDate).toISOString()
+    this.release.actDate = ( ele.id && ele.actDate ) ? new Date(ele.actDate).toISOString() : '';
     this.release.planDate = new Date(ele.planDate).toISOString()
     this.release.version = ele.version
     this.release.status = ele.status;
     this.isNewRelease = true;
   }
   isValidRelease(){
-    return this.release.releaseDrop && this.release.deliveryType && this.release.label && this.release.actDate && this.release.planDate && this.release.version && this.release.status ? true : false;
+    return this.release.releaseDrop && this.release.deliveryType && this.release.label && this.release.planDate && this.release.version  ? true : false;
+  }
+  openDialog(id): void {
+    let dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '500px',
+      data: { id:id ? id : undefined }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result && result.id) 
+        this.deleteRelease(result.id);
+    });
   }
 }
 

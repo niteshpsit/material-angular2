@@ -12,11 +12,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MatIconModule } from '@angular/material';
 import { MomentModule } from 'angular2-moment';
+import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
+import { ConfirmDialog } from './component/confirmDialog.component'
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ConfirmDialog
   ],
   imports: [    
     BrowserModule,
@@ -34,9 +37,11 @@ import { AppComponent } from './app.component';
     MatProgressSpinnerModule,
     HttpModule,
     MomentModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[ ConfirmDialog ]
 })
 export class AppModule { }

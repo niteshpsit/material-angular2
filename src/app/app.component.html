@@ -12,52 +12,52 @@
     
         <!-- Position Column -->
         <ng-container matColumnDef="releaseDrop">
-          <mat-header-cell *matHeaderCellDef>Release Drop</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Drop </h2></mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.releaseDrop}} </mat-cell>
         </ng-container>
     
         <!-- Name Column -->
         <ng-container matColumnDef="deliveryType">
-          <mat-header-cell *matHeaderCellDef> Delivery Type </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Delivery Type</h2> </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.deliveryType}} </mat-cell>
         </ng-container>
 
         <!-- Name Column -->
         <ng-container matColumnDef="label">
-            <mat-header-cell *matHeaderCellDef> Label </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef><h2> Label </h2></mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.label}} </mat-cell>
         </ng-container>
     
         <!-- Weight Column -->
         <ng-container matColumnDef="actDate">
-          <mat-header-cell *matHeaderCellDef> Actual Date </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.actDate | amDateFormat: 'YYYY-MM-DD' }} </mat-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Actual Date</h2> </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.actDate ? ( element.actDate | amDateFormat: 'YYYY-MM-DD' ) : '- -' }} </mat-cell>
         </ng-container>
     
         <!-- Color Column -->
         <ng-container matColumnDef="planDate">
-          <mat-header-cell *matHeaderCellDef> Plan Date </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Plan Date </h2></mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.planDate | amDateFormat: 'YYYY-MM-DD'}} </mat-cell>
         </ng-container>
 
          <!-- Name Column -->
          <ng-container matColumnDef="version">
-          <mat-header-cell *matHeaderCellDef> Version </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Version </h2></mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.version}} </mat-cell>
         </ng-container>
 
         <!-- Color Column -->
         <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Status </h2> </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
         </ng-container>
 
         <!-- Color Column -->
         <ng-container matColumnDef="id">
-          <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef><h2> Actions </h2></mat-header-cell>
           <mat-cell *matCellDef="let element"> 
               <mat-icon svgIcon="edit" class="cursorclass" (click)="editRelease(element)"></mat-icon>
-              <mat-icon svgIcon="clear" class="cursorclass" (click)="deleteRelease(element.id)"></mat-icon>  
+              <mat-icon svgIcon="clear" class="cursorclass" (click)="openDialog(element.id)"></mat-icon>  
           </mat-cell>
         </ng-container>
 
@@ -105,7 +105,7 @@
         <input matInput placeholder="Version" [(ngModel)]="release.version">
       </mat-form-field>
     </td>
-    <td>
+    <td *ngIf="release.id && release.id !== ''">
       <mat-form-field>
         <input matInput [matDatepicker]="actDate" placeholder="Actual Date" [(ngModel)]="release.actDate">
         <mat-datepicker-toggle matSuffix [for]="actDate" ></mat-datepicker-toggle>
@@ -120,7 +120,7 @@
       </mat-form-field>
     </td>
 
-    <td> 
+    <td *ngIf="release.id && release.id !== ''"> 
       <mat-form-field>
         <mat-select placeholder="Status" [(ngModel)]="release.status">
           <mat-option *ngFor="let status of releaseStatus" [value]="status.value">
@@ -130,14 +130,5 @@
       </mat-form-field>
     </td>
   </tr></table>
-  <!--mat-form-field>
-    <textarea matInput placeholder="Textarea"></textarea>
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-select placeholder="Select">
-      <mat-option value="option">Option</mat-option>
-    </mat-select>
-  </mat-form-field> -->
 </div>
 
