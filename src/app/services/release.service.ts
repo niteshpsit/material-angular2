@@ -1,44 +1,47 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
-
+import { config } from'../constant/constant';
 const headers = new Headers({ 'Content-Type': 'application/json' });
 const options = new RequestOptions({ headers: headers });
 
 @Injectable()
 export class ReleaseService {
-    url: string = '/api/release'
-    getReleaseCalendarURL = 'http://136.225.104.48:8080/calender/user/get';
-    postURL = 'http://136.225.104.48:8080/calender/user/add';
-    releaseTypeURL = 'http://136.225.104.48:8080/calender/user/releaseType';
-    dropURL = 'http://136.225.104.48:8080/calender/user/deliveryDrop';
-    deleteURL = 'http://136.225.104.48:8080/calender/user/delete?id=';
-    updateReleaseURL = 'http://136.225.104.48:8080/calender/user/update';
-    constructor(private http: Http) { }
+    tpgName: string = '';
+    constructor( private http: Http ) {}
+    getBaseURL(): string{
+        return config.baseUrl+'/calendar/cpm';
+    }
     getHeroes(): any {
-        return this.http.get(this.getReleaseCalendarURL).toPromise()
+        let url = this.getBaseURL() + config.getReleaseURL;
+        return this.http.get(url).toPromise()
     }
     getReleaseTypes(){
-        return this.http.get(this.releaseTypeURL).toPromise()
+        let url = this.getBaseURL() + config.releaseTypeURL;
+        return this.http.get(url).toPromise()
     }
     getDropList(){
-        return this.http.get(this.dropURL).toPromise()
+        let url = this.getBaseURL() + config.dropURL;
+        return this.http.get(url).toPromise()
     }
     addRelease(release: any): Promise<any> {
+        let url = this.getBaseURL() + config.addReleaseURL;
         delete release.id;
         delete release.actDate;
         delete release.status;
-        return this.http.post(this.postURL, release, options).toPromise()
+        return this.http.post(url, release, options).toPromise()
     }
     updateRelease(release: any){
+        let url = this.getBaseURL() + config.updateReleaseURL;
         if( !release.actDate || release.actDate === "" || release.actDate === null ) 
             delete release.actDate;
         if( !release.status || release.status === "" )
             delete release.status;
-        return this.http.post(this.updateReleaseURL, release, options).toPromise()
+        return this.http.post(url, release, options).toPromise()
     }
     deleteRelease(id){
-        let deleteURL = this.deleteURL + id;
-        return this.http.post(deleteURL,null, options).toPromise()
+        let url = this.getBaseURL() + config.deleteURL;
+        url = url + id;
+        return this.http.post(url,null, options).toPromise()
     }
 }

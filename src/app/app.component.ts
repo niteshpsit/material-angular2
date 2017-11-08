@@ -5,8 +5,9 @@ import {Observable} from 'rxjs/Observable';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatIconRegistry} from '@angular/material';
 import {MatDialog} from '@angular/material';
-import { ConfirmDialog } from './component/confirmDialog.component'
+import { ConfirmDialog } from './component/confirmDialog.component';
 import 'rxjs/add/observable/of';
+const baseUrl = 'release/';
 
 @Component({
   selector: 'app-root',
@@ -33,10 +34,10 @@ export class AppComponent implements OnInit  {
 
     iconRegistry.addSvgIcon(
       'clear',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/ic_clear_black_24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl(baseUrl+'assets/ic_clear_black_24px.svg'));
     iconRegistry.addSvgIcon(
       'edit',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/ic_create_black_24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl(baseUrl+'assets/ic_create_black_24px.svg'));
   }
   getRelCalendar(): void {
     this.loading = false;

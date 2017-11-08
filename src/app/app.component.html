@@ -31,13 +31,13 @@
         <!-- Weight Column -->
         <ng-container matColumnDef="actDate">
           <mat-header-cell *matHeaderCellDef><h2> Actual Date</h2> </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.actDate ? ( element.actDate | amDateFormat: 'YYYY-MM-DD' ) : '- -' }} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.actDate ? ( element.actDate | amLocal  | amDateFormat: 'YYYY-MM-DD' ) : '- -' }} </mat-cell>
         </ng-container>
     
         <!-- Color Column -->
         <ng-container matColumnDef="planDate">
           <mat-header-cell *matHeaderCellDef><h2> Plan Date </h2></mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.planDate | amDateFormat: 'YYYY-MM-DD'}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.planDate | amLocal  | amDateFormat: 'YYYY-MM-DD'}} </mat-cell>
         </ng-container>
 
          <!-- Name Column -->
