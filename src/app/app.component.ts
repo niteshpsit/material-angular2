@@ -123,7 +123,7 @@ export class AppComponent implements OnInit  {
     this.isNewRelease = true;
   }
   isValidRelease(){
-    return this.release.releaseDrop && this.release.deliveryType && this.release.label && this.release.planDate && this.release.version  ? true : false;
+    return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version  ? true : false;
   }
   openDialog(id): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
