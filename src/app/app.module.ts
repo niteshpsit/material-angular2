@@ -14,17 +14,21 @@ import { MatIconModule } from '@angular/material';
 import { MomentModule } from 'angular2-moment';
 import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
-import { ConfirmDialog } from './component/confirmDialog.component'
+import { ConfirmDialog } from './component/confirm-dialog/confirmDialog.component'
+import { ReleaseComponent } from './component/release/release.component'
+import { AppRoutingModule } from './app-router.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConfirmDialog
+    ConfirmDialog,
+    ReleaseComponent
   ],
   imports: [    
     BrowserModule,
     CommonModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,

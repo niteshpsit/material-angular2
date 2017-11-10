@@ -1,0 +1,95 @@
+<div *ngIf="isRelease">
+    <h2>Release Content</h2>
+    <mat-table #table [dataSource]="releaseDataList" *ngIf="loading">
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef style="flex:.2">
+                <h2> Type </h2>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element" style="flex:.2"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="label">
+            <mat-header-cell *matHeaderCellDef style="flex:.2">
+                <h2> Label </h2>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element" style="flex:.2"> {{element.label}} </mat-cell>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="release">
+            <mat-header-cell *matHeaderCellDef>
+                <h2> Releases </h2>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div *ngFor="let rel of element.releases" style="display:inline-block; margin-right:25px">
+                    <span>
+                        <h4>{{rel.name}}</h4>
+                        <span>
+                            <mat-checkbox
+                                [(ngModel)]="rel.needToDeliver"
+                                [disabled]="true"
+                            >To Be Deliver</mat-checkbox>
+                            <mat-checkbox
+                                [(ngModel)]="rel.delivered"
+                                [disabled]="true"
+                            >Delivered</mat-checkbox>
+                        </span>
+                    </span>
+                </div>
+            </mat-cell>
+        </ng-container> -->
+
+        <ng-container  *ngFor="let rel of releaseList" [matColumnDef]="rel">
+                <mat-header-cell *matHeaderCellDef style="flex:.2">
+                    <h2> {{rel}} </h2>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" style="flex:.2"> {{element[rel]}} </mat-cell>
+        </ng-container>
+    
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <table>
+        <tr class="space"></tr>
+        <tr *ngIf="isNewRelease">
+            <td>
+                <h4>{{rel}}</h4>
+                <mat-form-field>
+                    <mat-select placeholder="Select Type" [(ngModel)]="releaseData.name">
+                        <mat-option *ngFor="let type of taskTypeList" [value]="type">
+                            {{ type }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+            <td class="newspace">
+                <h4>{{rel}}</h4>
+                <mat-form-field>
+                    <input matInput placeholder="Label" [(ngModel)]="releaseData.label">
+                </mat-form-field>
+            </td>
+            <td *ngFor="let rel of releaseList">
+                <div style="display:inline-block; margin-left:30px">
+                    <span>
+                        <h4>{{rel}}</h4>
+                        <span>
+                            <mat-checkbox
+                                (change)="onChangeTBDStatus($event,rel)"
+                            >To Be Deliver</mat-checkbox>
+                            <mat-checkbox
+                                (change)="onChangeDeliverStatus($event,rel)"
+                            >Delivered</mat-checkbox>
+                        </span>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <button class="floatright" mat-raised-button color="primary" (click)="onAddNewReleaase($event)"> {{ isNewRelease ?  'Hide' : 'Add New Release' }}</button>
+            <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)"> Reset </button>
+            <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> Submit </button>
+        </tr>
+    </table>
+</div>

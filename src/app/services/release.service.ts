@@ -13,7 +13,7 @@ export class ReleaseService {
         return config.baseUrl+'/calendar/cpm';
     }
     getHeroes(): any {
-        let url = this.getBaseURL() + config.getReleaseURL;
+        let url = this.getBaseURL() + config.getReleaseCalendarURL;
         return this.http.get(url).toPromise()
     }
     getReleaseTypes(){
@@ -43,5 +43,60 @@ export class ReleaseService {
         let url = this.getBaseURL() + config.deleteURL;
         url = url + id;
         return this.http.post(url,null, options).toPromise()
+    }
+    getReleaseData(): Promise<any> {
+        let url = this.getBaseURL() + config.releaseDataURL;
+        //return this.http.get(url).toPromise()
+        return new Promise((resolve, reject)=>{
+            resolve(
+                [{
+                    "name":'BSUC',
+                    "label":"xyx",
+                    "new":"d",
+                    "1747":"eqwer",
+                    "releases": [
+                        {
+                            "name": "1747",
+                            "delivered":false,
+                            "needToDeliver":true
+                        },
+                        {
+                            "name": "1750",
+                            "delivered":true,
+                            "needToDeliver":true
+                        },
+                        {
+                            "name": "1747EP01",
+                            "delivered":"false",
+                            "needToDeliver":false
+                        },
+                        {
+                            "name": "1747 REPACK",
+                            "delivered":true,
+                            "needToDeliver":true
+                        }
+                    ]
+                }]
+            )
+        })
+    }
+    getRelease():Promise<any>{
+        let url = this.getBaseURL() + config.releaseURL;
+        //return this.http.get(url).toPromise()
+        return new Promise((resolve, reject)=>{
+            resolve(['1747','1750','1747EP01','1747 REPACK'])
+        })
+    }
+    getTaskType():Promise<any>{
+        let url = this.getBaseURL() + config.releaseURL;
+        //return this.http.get(url).toPromise()
+        return new Promise((resolve, reject)=>{
+            resolve(['PBI','BSUC','TR'])
+        })
+    }
+    addReleaseData(release){
+        let url = this.getBaseURL() + config.addReleaseDataURL;
+        delete release.id;
+        return this.http.post(url, release, options).toPromise()
     }
 }
