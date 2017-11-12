@@ -161,13 +161,14 @@ export class ReleaseComponent {
         return this.releaseData.name && this.releaseData.label.trim() ? true : false;
     }
     editRelease(ele) {
-        this.releaseData.id = ele.id;
-        this.releaseData.name = ele.name;
-        this.releaseData.label = ele.label;
-        this.releaseData.releases = ele.releases;
+        let newObject = Object.assign({}, ele)
+        this.releaseData.id = newObject.id;
+        this.releaseData.name = newObject.name;
+        this.releaseData.label = newObject.label;
+        this.releaseData.releases = [...newObject.releases];
         this.columnList.forEach((column)=>{
-            if(ele[column]){
-                this.releaseData[column] = ele[column];
+            if(newObject[column]){
+                this.releaseData[column] = {  ...newObject[column] } ;
             }
             else {
                 this.releaseData[column] = { needToDeliver: false, delivered: false }
