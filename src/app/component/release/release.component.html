@@ -1,95 +1,85 @@
 <div *ngIf="isRelease">
     <h2>Release Content</h2>
     <mat-table #table [dataSource]="releaseDataList" *ngIf="loading">
-
         <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef style="flex:.2">
+            <mat-header-cell *matHeaderCellDef>
                 <h2> Type </h2>
             </mat-header-cell>
-            <mat-cell *matCellDef="let element" style="flex:.2"> {{element.name}} </mat-cell>
-        </ng-container>
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="label">
-            <mat-header-cell *matHeaderCellDef style="flex:.2">
-                <h2> Label </h2>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element" style="flex:.2"> {{element.label}} </mat-cell>
-        </ng-container>
-
-        <!-- <ng-container matColumnDef="release">
-            <mat-header-cell *matHeaderCellDef>
-                <h2> Releases </h2>
-            </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <div *ngFor="let rel of element.releases" style="display:inline-block; margin-right:25px">
-                    <span>
-                        <h4>{{rel.name}}</h4>
-                        <span>
-                            <mat-checkbox
-                                [(ngModel)]="rel.needToDeliver"
-                                [disabled]="true"
-                            >To Be Deliver</mat-checkbox>
-                            <mat-checkbox
-                                [(ngModel)]="rel.delivered"
-                                [disabled]="true"
-                            >Delivered</mat-checkbox>
-                        </span>
-                    </span>
+                <div *ngIf="element.id && element.id !== '' && !element.elementStatus">
+                    {{element.name}}
                 </div>
-            </mat-cell>
-        </ng-container> -->
-
-        <ng-container  *ngFor="let rel of releaseList" [matColumnDef]="rel">
-                <mat-header-cell *matHeaderCellDef style="flex:.2">
-                    <h2> {{rel}} </h2>
-                </mat-header-cell>
-                <mat-cell *matCellDef="let element" style="flex:.2"> {{element[rel]}} </mat-cell>
-        </ng-container>
-    
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-    <table>
-        <tr class="space"></tr>
-        <tr *ngIf="isNewRelease">
-            <td>
-                <h4>{{rel}}</h4>
-                <mat-form-field>
+                <mat-form-field *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'">
                     <mat-select placeholder="Select Type" [(ngModel)]="releaseData.name">
                         <mat-option *ngFor="let type of taskTypeList" [value]="type">
                             {{ type }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </td>
-            <td class="newspace">
-                <h4>{{rel}}</h4>
-                <mat-form-field>
+            </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="label">
+            <mat-header-cell *matHeaderCellDef>
+                <h2> Label </h2>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div *ngIf="element.id && element.id !== '' && !element.elementStatus">
+                    {{element.label }}
+                </div>
+                <mat-form-field *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'">
                     <input matInput placeholder="Label" [(ngModel)]="releaseData.label">
                 </mat-form-field>
-            </td>
-            <td *ngFor="let rel of releaseList">
-                <div style="display:inline-block; margin-left:30px">
-                    <span>
-                        <h4>{{rel}}</h4>
-                        <span>
-                            <mat-checkbox
-                                (change)="onChangeTBDStatus($event,rel)"
-                            >To Be Deliver</mat-checkbox>
-                            <mat-checkbox
-                                (change)="onChangeDeliverStatus($event,rel)"
-                            >Delivered</mat-checkbox>
-                        </span>
-                    </span>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container *ngFor="let rel of columnList" [matColumnDef]="rel">
+            <mat-header-cell *matHeaderCellDef>
+                <h2> {{rel}} </h2>
+                <div> <span> <b> To Be Delivere</b> </span><span><b>Delivered</b></span> </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+
+                <span *ngIf="element[rel] && element.id && element.id !== '' && !element.elementStatus">
+                    <mat-checkbox
+                        [(ngModel)]="element[rel].needToDeliver"
+                        [disabled]="true"
+                    ></mat-checkbox>
+                    <mat-checkbox
+                        [(ngModel)]="element[rel].delivered"
+                        [disabled]="true"
+                    ></mat-checkbox>
+                </span>
+                <span *ngIf="element[rel] && ( element.elementStatus ==='new' || element.elementStatus ==='edit' )">
+                    <mat-checkbox  
+                        (change)="onChangeTBDStatus($event,rel)"
+                        [(ngModel)]="element[rel].needToDeliver"
+                    ></mat-checkbox>
+                    <mat-checkbox  
+                        (change)="onChangeDeliverStatus($event,rel)"
+                        [(ngModel)]="element[rel].delivered"
+
+                    ></mat-checkbox>
+                </span>
+            </mat-cell>
+        </ng-container>
+        <!-- Color Column -->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef>
+                <h2> Actions </h2>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div *ngIf="element && element.id && element.id !== '' && !element.elementStatus">
+                <mat-icon svgIcon="edit" class="cursorclass" (click)="editRelease(element)"></mat-icon>
+                <mat-icon svgIcon="clear" class="cursorclass" (click)="openDialog(element.id)"></mat-icon>
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <button class="floatright" mat-raised-button color="primary" (click)="onAddNewReleaase($event)"> {{ isNewRelease ?  'Hide' : 'Add New Release' }}</button>
-            <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)"> Reset </button>
-            <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> Submit </button>
-        </tr>
-    </table>
+                <button *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> {{ element.elementStatus ==='new' ? 'CREATE' : 'SUBMIT'}} </button>
+                <button *ngIf="( element.elementStatus ==='new' || element.elementStatus ==='edit' ) && isValidRelease()" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)" [disabled]="!isValidRelease()"> {{ element.elementStatus ==='new' ? 'RESET' : 'CANCEL'}} </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="row.id === releaseData.id && !row.elementStatus ? 'editRow' : ''"></mat-row>
+    </mat-table>
 </div>

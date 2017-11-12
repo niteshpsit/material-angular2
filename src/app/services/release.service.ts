@@ -46,14 +46,40 @@ export class ReleaseService {
     }
     getReleaseData(): Promise<any> {
         let url = this.getBaseURL() + config.releaseDataURL;
+        //let url = 'assets/releaseList.josn'
         //return this.http.get(url).toPromise()
         return new Promise((resolve, reject)=>{
             resolve(
                 [{
-                    "name":'BSUC',
-                    "label":"xyx",
-                    "new":"d",
-                    "1747":"eqwer",
+                    "id":"1",
+                    "name":"BSUC-1",
+                    "label":"label-1",
+                    "releases": [
+                        {
+                            "name": "1747",
+                            "delivered":false,
+                            "needToDeliver":true
+                        },
+                        {
+                            "name": "1750",
+                            "delivered":true,
+                            "needToDeliver":true
+                        },
+                        {
+                            "name": "1747EP01",
+                            "delivered":false,
+                            "needToDeliver":false
+                        },
+                        {
+                            "name": "1747 REPACK",
+                            "delivered":true,
+                            "needToDeliver":true
+                        }
+                    ]
+                },{
+                    "id":"2",
+                    "name":"BSUC-2",
+                    "label":"label-2",
                     "releases": [
                         {
                             "name": "1747",
@@ -74,6 +100,32 @@ export class ReleaseService {
                             "name": "1747 REPACK",
                             "delivered":true,
                             "needToDeliver":true
+                        },
+                        {
+                            "name": "1747 REPACK-1",
+                            "delivered":true,
+                            "needToDeliver":true
+                        }
+                    ]
+                },{
+                    "id":"3",
+                    "name":"BSUC-3",
+                    "label":"label-3",
+                    "releases": [
+                        {
+                            "name": "1747",
+                            "delivered":false,
+                            "needToDeliver":true
+                        },
+                        {
+                            "name": "1750",
+                            "delivered":true,
+                            "needToDeliver":true
+                        },
+                        {
+                            "name": "1747 REPACK-1",
+                            "delivered":false,
+                            "needToDeliver":false
                         }
                     ]
                 }]
@@ -91,12 +143,23 @@ export class ReleaseService {
         let url = this.getBaseURL() + config.releaseURL;
         //return this.http.get(url).toPromise()
         return new Promise((resolve, reject)=>{
-            resolve(['PBI','BSUC','TR'])
+            resolve(['BSUC-1','BSUC-2','BSUC-3','BSUC-4'])
         })
     }
     addReleaseData(release){
         let url = this.getBaseURL() + config.addReleaseDataURL;
         delete release.id;
+        console.log("====new",release);
         return this.http.post(url, release, options).toPromise()
+    }
+    updateReleaseData(release){
+        let url = this.getBaseURL() + config.addReleaseDataURL;
+        console.log("====update",release);
+        return this.http.post(url, release, options).toPromise()
+    }
+    deleteReleaseContent(id){
+        let url = this.getBaseURL() + config.deleteContentURL;
+        url = url + id;
+        return this.http.post(url,null, options).toPromise()
     }
 }

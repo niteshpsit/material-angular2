@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     public dialog: MatDialog) {
-    this.isReleaseCalendarPage = config.getParameterByName('page',undefined) === 'releasecalendar';
+    this.isReleaseCalendarPage = config.getParameterByName('page', undefined) === 'releasecalendar';
     iconRegistry.addSvgIcon(
       'clear',
       sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_clear_black_24px.svg'));

@@ -1,0 +1,76 @@
+[{
+    "name":"BSUC-1",
+    "label":"label-1",
+    "releases": [
+        {
+            "name": "1747",
+            "delivered":false,
+            "needToDeliver":true
+        },
+        {
+            "name": "1750",
+            "delivered":true,
+            "needToDeliver":true
+        },
+        {
+            "name": "1747EP01",
+            "delivered":"false",
+            "needToDeliver":false
+        },
+        {
+            "name": "1747 REPACK",
+            "delivered":true,
+            "needToDeliver":true
+        }
+    ]
+},{
+    "name":"BSUC-2",
+    "label":"label-2",
+    "releases": [
+        {
+            "name": "1747",
+            "delivered":false,
+            "needToDeliver":true
+        },
+        {
+            "name": "1750",
+            "delivered":true,
+            "needToDeliver":true
+        },
+        {
+            "name": "1747EP01",
+            "delivered":"false",
+            "needToDeliver":false
+        },
+        {
+            "name": "1747 REPACK",
+            "delivered":true,
+            "needToDeliver":true
+        },
+        {
+            "name": "1747 REPACK-1",
+            "delivered":true,
+            "needToDeliver":true
+        }
+    ]
+},{
+    "name":"BSUC-3",
+    "label":"label-3",
+    "releases": [
+        {
+            "name": "1747",
+            "delivered":false,
+            "needToDeliver":true
+        },
+        {
+            "name": "1750",
+            "delivered":true,
+            "needToDeliver":true
+        },
+        {
+            "name": "1747EP01",
+            "delivered":"false",
+            "needToDeliver":false
+        }
+    ]
+}]

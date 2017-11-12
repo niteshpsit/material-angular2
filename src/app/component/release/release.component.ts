@@ -5,9 +5,12 @@ import { Observable } from 'rxjs/Observable';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { ConfirmDialog } from '../confirm-dialog/confirmDialog.component';
 import { config, commonFunctions } from '../../constant/constant';
 import 'rxjs/add/observable/of';
 
+//const baseUrl = 'release/';
+const baseUrl = '';
 @Component({
     selector: 'release',
     templateUrl: 'release.component.html',
@@ -15,7 +18,6 @@ import 'rxjs/add/observable/of';
 })
 export class ReleaseComponent {
     isRelease: boolean = false;
-    isNewRelease: boolean = true;
     loading: boolean = false;
     taskTypeList: string[] = [];
     releaseList: string[] = [];
@@ -24,36 +26,53 @@ export class ReleaseComponent {
         id:"",
         name: '',
         label: "",
+        elementStatus:"new",
         releases: []
     }
     newLi: string = 'new'
     data: string = ''
     displayedColumns: string[] = [];
-    releaseDataInfo:any
+    columnList: string[] = [];
+    tableData = [];
     constructor(
         private releaseService: ReleaseService,
         iconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
         public dialog: MatDialog) {
-
         this.isRelease = config.getParameterByName('page', undefined) === 'release';
+        iconRegistry.addSvgIcon(
+            'clear',
+            sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_clear_black_24px.svg'));
+          iconRegistry.addSvgIcon(
+            'edit',
+            sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_create_black_24px.svg'));
     }
     getReleaseData(): void {
         this.loading = false;
         this.displayedColumns = ['name', 'label'];
-        this.releaseService.getReleaseData().then(releaseData => {
-            console.log("====re",releaseData);
-            
-            this.releaseDataInfo  = releaseData;
-            //this.releaseDataList = new ExampleDataSource(JSON.parse(releaseData._body))
-            this.releaseDataList = new ExampleDataSource(releaseData)
-            this.loading = true;
-            console.log("======asfd",this.releaseDataInfo)
-            this.releaseDataInfo[0].releases.forEach((release)=>{
-                console.log("=======in");
-                this.displayedColumns.push(release.name)
+        this.releaseService.getReleaseData().then(releaList => {
+            let releaseDataInfo  = releaList;
+            this.tableData = [];
+            this.columnList = [];
+            //releaseDataInfo = new ExampleDataSource(JSON.parse(releaseData._body))
+            releaseDataInfo.forEach(releaseData=>{
+                let tableColumn = { name: releaseData.name, label:releaseData.label, id:releaseData.id, releases: releaseData.releases }
+                releaseData.releases.forEach(release=>{
+                    tableColumn[release.name] = { needToDeliver: release.needToDeliver, delivered: release.delivered };
+                    if(!commonFunctions.isInArray(this.displayedColumns,release.name)){
+                        this.releaseData[release.name] = { needToDeliver: false, delivered: false }
+                        this.columnList.push(release.name);
+                        this.displayedColumns.push(release.name);
+                    }
+                });
+                this.tableData.push(tableColumn);
             })
-            console.log("===",this.displayedColumns);
+            this.tableData.push(this.releaseData);
+            // This is for last column
+            this.displayedColumns.push("id");
+            this.releaseDataList = new ExampleDataSource(this.tableData);
+            this.loading = true;
+            
         });
     }
     getReleases() {
@@ -62,7 +81,6 @@ export class ReleaseComponent {
             .then(list => {
                 // need to parse when api get ready
                 this.releaseList = list;
-                console.log("releaseList", this.releaseList);
             })
     }
     getTaskType() {
@@ -71,7 +89,6 @@ export class ReleaseComponent {
             .then(list => {
                 // need to parse when api get ready
                 this.taskTypeList = list;
-                console.log("taskTypeLsit", this.taskTypeList);
             })
     }
     ngOnInit(): void {
@@ -84,11 +101,12 @@ export class ReleaseComponent {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
                     release['needToDeliver'] = event.checked;
+                    release['delivered'] = release.delivered ? release.delivered : false ;
                 }
             })
         }
         else {
-            let release = { name: releaseName, needToDeliver: event.checked }
+            let release = { name: releaseName, needToDeliver: event.checked, delivered: false }
             this.releaseData.releases.push(release);
         }
     }
@@ -97,46 +115,84 @@ export class ReleaseComponent {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
                     release['delivered'] = event.checked;
+                    release['needToDeliver'] = release.needToDeliver ? release.needToDeliver : false ;
                 }
             })
         }
         else {
-            let release = { name: releaseName, delivered: event.checked }
+            let release = { name: releaseName, delivered: event.checked, needToDeliver: false }
             this.releaseData.releases.push(release);
         }
+        console.log("==this",this.releaseData);
     }
     onSubmitNew() {
-        // if (this.releaseData.id && this.releaseData.id !== "") {
-        //   this.releaseService.updateReleaseData(this.releaseData)
-        //     .then((data) => {
-        //       this.resetReleaase();
-        //       this.isNewRelease = !this.isNewRelease;
-        //       this.getReleaseData();
-        //     })
-        // } else {
-          this.releaseService.addReleaseData(this.releaseData)
+        let releaseData = { id:this.releaseData.id, name: this.releaseData.name, label:this.releaseData.label, releases:this.releaseData.releases };
+        if (releaseData.id && releaseData.id !== "") {
+            this.releaseService.updateReleaseData(releaseData)
             .then((data) => {
-                console.log("=====data",data);
-              this.resetReleaase();
-              this.isNewRelease = !this.isNewRelease;
-              this.getReleaseData();
+                this.resetReleaase();
+                this.getReleaseData();
             })
-        //}
+        } else {
+            this.releaseService.addReleaseData(releaseData)
+            .then((data) => {
+                this.resetReleaase();
+                this.getReleaseData();
+            })
+        }
     
-      }
+    }
     resetReleaase() {
         this.releaseData = {
+            id:"",
             name: '',
             label: "",
+            elementStatus:"new",
             releases: []
         }
+        this.columnList.forEach((column)=>{
+            this.releaseData[column] = { needToDeliver: false, delivered: false }
+        });
+        this.releaseData.elementStatus = "new";
+        this.tableData[this.tableData.length -1] = this.releaseData;
+        this.releaseDataList = new ExampleDataSource(this.tableData);
     }
     isValidRelease() {
         return this.releaseData.name && this.releaseData.label.trim() ? true : false;
     }
-    onAddNewReleaase() {
-        this.resetReleaase();
-        this.isNewRelease = !this.isNewRelease
+    editRelease(ele) {
+        this.releaseData.id = ele.id;
+        this.releaseData.name = ele.name;
+        this.releaseData.label = ele.label;
+        this.releaseData.releases = ele.releases;
+        this.columnList.forEach((column)=>{
+            if(ele[column]){
+                this.releaseData[column] = ele[column];
+            }
+            else {
+                this.releaseData[column] = { needToDeliver: false, delivered: false }
+            }
+        })
+        this.releaseData.elementStatus = "edit";
+        this.tableData[this.tableData.length -1] = this.releaseData;
+        this.releaseDataList = new ExampleDataSource(this.tableData);
+    }
+    deleteRelease(id) {
+        this.releaseService.deleteReleaseContent(id)
+        .then((data) => {
+            this.getReleaseData();
+        })
+    }
+    openDialog(id): void {
+        let dialogRef = this.dialog.open(ConfirmDialog, {
+          width: '500px',
+          data: { id: id ? id : undefined }
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          if (result && result.id)
+            this.deleteRelease(result.id);
+        });
     }
 }
 

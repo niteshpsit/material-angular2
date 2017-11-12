@@ -11,6 +11,7 @@ export const config = {
     releaseURL:'/api/release',
     releaseDataURL:'/getTqa',
     addReleaseDataURL: '/addTqa',
+    deleteContentURL:'/delete',
     getParameterByName: function(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
@@ -32,5 +33,8 @@ export const commonFunctions = {
         }
     
         return false;
+    },
+    isInArray: function(array, value) {
+        return array.indexOf(value) > -1;
     }
 }
