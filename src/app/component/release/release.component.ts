@@ -147,10 +147,18 @@ export class ReleaseComponent {
             .then((data) => {
                 this.getReleases();
             })
+            .catch(error=>{
+                let message = JSON.parse(error._body).Message;
+                this.errorDialog(message);
+            })
         } else {
             this.releaseService.addReleaseData(releaseData)
             .then((data) => {
                 this.getReleases();
+            })
+            .catch(error=>{
+                let message = JSON.parse(error._body).Message;
+                this.errorDialog(message);
             })
         }
     
@@ -197,7 +205,7 @@ export class ReleaseComponent {
             this.getReleases();
         })
     }
-    openDialog(id): void {
+    confirmDialog(id): void {
         let dialogRef = this.dialog.open(ConfirmDialog, {
           width: '500px',
           data: { id: id ? id : undefined }
@@ -206,6 +214,20 @@ export class ReleaseComponent {
         dialogRef.afterClosed().subscribe(result => {
           if (result && result.id)
             this.deleteRelease(result.id);
+        });
+    }
+    errorDialog(message){
+        let dialogRef = this.dialog.open(ConfirmDialog, {
+            width: '500px',
+            data: { 
+                header:" ",
+                info:message ? message: "error",
+                type:"error"
+            }
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log("===this.error",result);
         });
     }
 }

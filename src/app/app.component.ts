@@ -98,6 +98,10 @@ export class AppComponent implements OnInit {
           this.isNewRelease = !this.isNewRelease;
           this.getRelCalendar();
         })
+        .catch(error=>{
+          let message = JSON.parse(error._body).Message;
+          this.errorDialog(message);
+        })
     } else {
       this.releaseService.addRelease(this.release)
         .then((data) => {
@@ -105,6 +109,10 @@ export class AppComponent implements OnInit {
           this.isNewRelease = !this.isNewRelease;
           this.getRelCalendar();
         })
+        .catch(error=>{
+          let message = JSON.parse(error._body).Message;
+          this.errorDialog(message);
+      })
     }
 
   }
@@ -139,6 +147,20 @@ export class AppComponent implements OnInit {
         this.deleteRelease(result.id);
     });
   }
+  errorDialog(message){
+    let dialogRef = this.dialog.open(ConfirmDialog, {
+        width: '500px',
+        data: { 
+            header:" ",
+            info:message ? message: "error",
+            type:"error"
+        }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+        console.log("===this.error",result);
+    });
+}
 }
 
 class ExampleDataSource extends DataSource<any> {

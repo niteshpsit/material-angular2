@@ -48,3 +48,7 @@
 .mat-button, .mat-fab, .mat-icon-button, .mat-mini-fab, .mat-raised-button{
   font-size: 9px;  
 }
+
+.mat-checkbox {
+  margin-right: 22px;
+}

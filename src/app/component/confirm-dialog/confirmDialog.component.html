@@ -1,8 +1,8 @@
-<h1 mat-dialog-title>Confirmation</h1>
+<h1 mat-dialog-title>{{displayData.header}}</h1>
 <div mat-dialog-content>
-  <p>Are you sure you want to delete ?</p>
+  <p [ngClass]="{ 'errorclass': displayData.type !== 'information' }">{{displayData.info}}</p>
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="data" tabindex="2">Ok</button>
-  <button mat-button (click)="onNoClick()" tabindex="-1">No Thanks</button>
+  <button mat-button (click)="onNoClick()" tabindex="-1" *ngIf="displayData.type === 'information'">No Thanks</button>
 </div>
