@@ -48,20 +48,20 @@ export class ReleaseComponent {
             sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_create_black_24px.svg'));
     }
     getReleaseData(): void {
+        //this.releaseDataList = undefined;
         this.loading = false;
-        this.displayedColumns = ['name', 'label'];
+        this.displayedColumns = ['name', 'label', ...this.releaseList];
         this.releaseService.getReleaseData().then(releaList => {
-            let releaseDataInfo  = releaList;
+            let releaseDataInfo;
             this.tableData = [];
-            this.columnList = [];
-            //releaseDataInfo = new ExampleDataSource(JSON.parse(releaseData._body))
+            releaseDataInfo = JSON.parse(releaList._body)
             releaseDataInfo.forEach(releaseData=>{
                 let tableColumn = { name: releaseData.name, label:releaseData.label, id:releaseData.id, releases: releaseData.releases }
                 releaseData.releases.forEach(release=>{
-                    tableColumn[release.name] = { needToDeliver: release.needToDeliver, delivered: release.delivered };
+                    tableColumn[release.name] = { needToBeDeliver: release.needToBeDeliver, delivered: release.delivered };
                     if(!commonFunctions.isInArray(this.displayedColumns,release.name)){
-                        this.releaseData[release.name] = { needToDeliver: false, delivered: false }
-                        this.columnList.push(release.name);
+                        this.releaseData[release.name] = { needToBeDeliver: false, delivered: false }
+                        this.releaseList.push(release.name);
                         this.displayedColumns.push(release.name);
                     }
                 });
@@ -77,22 +77,37 @@ export class ReleaseComponent {
     }
     getReleases() {
         this.releaseList = [];
+        this.releaseData =  { id:"", name: '',  label: "",  elementStatus:"new",  releases: [] }
         this.releaseService.getRelease()
-            .then(list => {
-                // need to parse when api get ready
-                this.releaseList = list;
+        .then(list => {
+            this.releaseList = JSON.parse(list._body);
+            this.releaseList.forEach(release=>{
+                this.releaseData[release] = { needToBeDeliver: false, delivered: false }
             })
+            this.getReleaseData();
+        })
+        .catch(error=>{
+            console.log("release List error",error);
+            this.getReleaseData();
+            this.releaseList = [];
+        })
     }
     getTaskType() {
         this.taskTypeList = [];
         this.releaseService.getTaskType()
             .then(list => {
                 // need to parse when api get ready
-                this.taskTypeList = list;
+                let taskList = JSON.parse(list._body);
+                taskList.forEach(task=>{
+                    this.taskTypeList.push(task.taskType);
+                })
+            })
+            .catch(error=>{
+                console.log("====error",error)
+                this.taskTypeList = [];
             })
     }
     ngOnInit(): void {
-        this.getReleaseData();
         this.getReleases();
         this.getTaskType();
     }
@@ -100,13 +115,13 @@ export class ReleaseComponent {
         if (commonFunctions.containsObject(releaseName, this.releaseData.releases)) {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
-                    release['needToDeliver'] = event.checked;
+                    release['needToBeDeliver'] = event.checked;
                     release['delivered'] = release.delivered ? release.delivered : false ;
                 }
             })
         }
         else {
-            let release = { name: releaseName, needToDeliver: event.checked, delivered: false }
+            let release = { name: releaseName, needToBeDeliver: event.checked, delivered: false }
             this.releaseData.releases.push(release);
         }
     }
@@ -115,12 +130,12 @@ export class ReleaseComponent {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
                     release['delivered'] = event.checked;
-                    release['needToDeliver'] = release.needToDeliver ? release.needToDeliver : false ;
+                    release['needToBeDeliver'] = release.needToBeDeliver ? release.needToBeDeliver : false ;
                 }
             })
         }
         else {
-            let release = { name: releaseName, delivered: event.checked, needToDeliver: false }
+            let release = { name: releaseName, delivered: event.checked, needToBeDeliver: false }
             this.releaseData.releases.push(release);
         }
         console.log("==this",this.releaseData);
@@ -130,14 +145,12 @@ export class ReleaseComponent {
         if (releaseData.id && releaseData.id !== "") {
             this.releaseService.updateReleaseData(releaseData)
             .then((data) => {
-                this.resetReleaase();
-                this.getReleaseData();
+                this.getReleases();
             })
         } else {
             this.releaseService.addReleaseData(releaseData)
             .then((data) => {
-                this.resetReleaase();
-                this.getReleaseData();
+                this.getReleases();
             })
         }
     
@@ -150,8 +163,8 @@ export class ReleaseComponent {
             elementStatus:"new",
             releases: []
         }
-        this.columnList.forEach((column)=>{
-            this.releaseData[column] = { needToDeliver: false, delivered: false }
+        this.releaseList.forEach((column)=>{
+            this.releaseData[column] = { needToBeDeliver: false, delivered: false }
         });
         this.releaseData.elementStatus = "new";
         this.tableData[this.tableData.length -1] = this.releaseData;
@@ -166,12 +179,12 @@ export class ReleaseComponent {
         this.releaseData.name = newObject.name;
         this.releaseData.label = newObject.label;
         this.releaseData.releases = [...newObject.releases];
-        this.columnList.forEach((column)=>{
+        this.releaseList.forEach((column)=>{
             if(newObject[column]){
                 this.releaseData[column] = {  ...newObject[column] } ;
             }
             else {
-                this.releaseData[column] = { needToDeliver: false, delivered: false }
+                this.releaseData[column] = { needToBeDeliver: false, delivered: false }
             }
         })
         this.releaseData.elementStatus = "edit";
@@ -181,7 +194,7 @@ export class ReleaseComponent {
     deleteRelease(id) {
         this.releaseService.deleteReleaseContent(id)
         .then((data) => {
-            this.getReleaseData();
+            this.getReleases();
         })
     }
     openDialog(id): void {

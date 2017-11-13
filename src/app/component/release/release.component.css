@@ -32,3 +32,19 @@
   .cursorclass{
     cursor: pointer;
   }
+.mat-form-field{
+    width: 120px
+}
+
+.floatright[_ngcontent-c7] {
+  margin-right: 5px;
+}
+
+.mat-button, .mat-fab, .mat-icon-button, .mat-mini-fab, .mat-raised-button{
+  min-width: 50px;
+  line-height: 30px;
+}
+
+.mat-button, .mat-fab, .mat-icon-button, .mat-mini-fab, .mat-raised-button{
+  font-size: 9px;  
+}

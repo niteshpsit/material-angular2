@@ -8,10 +8,12 @@ export const config = {
     dropURL:'/deliveryDrop',
     deleteURL:'/delete?id=',
     updateReleaseURL:'/update',
-    releaseURL:'/api/release',
+    releaseURL:'/fetchLabel',
     releaseDataURL:'/getTqa',
     addReleaseDataURL: '/addTqa',
-    deleteContentURL:'/delete',
+    updateReleaseDataURL:'/updateTqa',
+    deleteContentURL:'/deleteTqa',
+    taskType: '/taskType',
     getParameterByName: function(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");

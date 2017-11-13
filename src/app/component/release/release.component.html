@@ -34,7 +34,7 @@
             </mat-cell>
         </ng-container>
 
-        <ng-container *ngFor="let rel of columnList" [matColumnDef]="rel">
+        <ng-container *ngFor="let rel of releaseList" [matColumnDef]="rel">
             <mat-header-cell *matHeaderCellDef>
                 <h2> {{rel}} </h2>
                 <div> <span> <b> To Be Delivere</b> </span><span><b>Delivered</b></span> </div>
@@ -43,7 +43,7 @@
 
                 <span *ngIf="element[rel] && element.id && element.id !== '' && !element.elementStatus">
                     <mat-checkbox
-                        [(ngModel)]="element[rel].needToDeliver"
+                        [(ngModel)]="element[rel].needToBeDeliver"
                         [disabled]="true"
                     ></mat-checkbox>
                     <mat-checkbox
@@ -54,7 +54,7 @@
                 <span *ngIf="element[rel] && ( element.elementStatus ==='new' || element.elementStatus ==='edit' )">
                     <mat-checkbox  
                         (change)="onChangeTBDStatus($event,rel)"
-                        [(ngModel)]="element[rel].needToDeliver"
+                        [(ngModel)]="element[rel].needToBeDeliver"
                     ></mat-checkbox>
                     <mat-checkbox  
                         (change)="onChangeDeliverStatus($event,rel)"
