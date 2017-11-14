@@ -116,7 +116,7 @@
         </td>
         <td>
           <mat-form-field>
-            <input matInput [matDatepicker]="planDate" placeholder="Plan Date" [(ngModel)]="release.planDate">
+            <input matInput [min]="startDate" [matDatepicker]="planDate" placeholder="Plan Date" [(ngModel)]="release.planDate">
             <mat-datepicker-toggle matSuffix [for]="planDate"></mat-datepicker-toggle>
             <mat-datepicker #planDate></mat-datepicker>
           </mat-form-field>

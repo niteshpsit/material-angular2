@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   deliveryList: any = [];
   loading: boolean = false;
   isNewRelease: boolean = false;
+  startDate = new Date();
   constructor(
     private releaseService: ReleaseService,
     iconRegistry: MatIconRegistry,
