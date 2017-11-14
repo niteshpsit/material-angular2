@@ -9,8 +9,6 @@ import { ConfirmDialog } from './component/confirm-dialog/confirmDialog.componen
 import { config, commonFunctions } from './constant/constant';
 import 'rxjs/add/observable/of';
 
-const baseUrl = 'release/';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -39,10 +37,10 @@ export class AppComponent implements OnInit {
       this.releaseService.page = null;
     iconRegistry.addSvgIcon(
       'clear',
-      sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_clear_black_24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl(config.baseFolderURL + 'assets/ic_clear_black_24px.svg'));
     iconRegistry.addSvgIcon(
       'edit',
-      sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_create_black_24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl(config.baseFolderURL + 'assets/ic_create_black_24px.svg'));
   }
   getRelCalendar(): void {
     this.loading = false;
@@ -151,6 +149,10 @@ export class AppComponent implements OnInit {
         this.deleteRelease(result.id);
     });
   }
+  gotoEditReleaseCalendarPage(){
+    let url = `${config.baseFolderURL}?page=${config.releasecalendarURL}`;
+    window.location.href = url
+}
   errorDialog(message) {
     let dialogRef = this.dialog.open(ConfirmDialog, {
       width: '500px',

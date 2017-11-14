@@ -1,7 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <router-outlet></router-outlet>
 <div *ngIf=" !releaseService.page || releaseService.page === 'releasecalendar' ">
-  <h2>Release Calendar</h2>
+  <h2>Release Calendar
+      <mat-icon svgIcon="edit" *ngIf="!releaseService.page" class="cursorclass" [ngStyle]="{'background-color': 'blanchedalmond'}" (click)="gotoEditReleaseCalendarPage()"></mat-icon>
+  </h2>
   <div style="text-align:center">
     <div class="example-container mat-elevation-z8">
       <div *ngIf="!loading">

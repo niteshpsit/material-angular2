@@ -1,5 +1,6 @@
 <div *ngIf=" !releaseService.page || releaseService.page === 'releasecontent' ">
-    <h2>Release Content</h2>
+    <h2>Release Content
+        <mat-icon svgIcon="edit" *ngIf="!releaseService.page" class="cursorclass" [ngStyle]="{'background-color': 'blanchedalmond'}" (click)="gotoEditReleaseContentPage()"></mat-icon></h2>
     <mat-table #table [dataSource]="releaseDataList" *ngIf="loading">
         <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef>

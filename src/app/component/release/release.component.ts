@@ -221,6 +221,10 @@ export class ReleaseComponent {
             this.deleteRelease(result.id);
         });
     }
+    gotoEditReleaseContentPage(){
+        let url = `${config.baseFolderURL}?page=${config.releasecontentURL}`;
+        window.location.href = url
+    }
     errorDialog(message){
         let dialogRef = this.dialog.open(ConfirmDialog, {
             width: '500px',
