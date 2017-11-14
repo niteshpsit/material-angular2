@@ -61,7 +61,7 @@
                     <mat-checkbox  
                         (change)="onChangeDeliverStatus($event,rel)"
                         [(ngModel)]="element[rel].delivered"
-
+                        [disabled]="element.elementStatus ==='new' || (element.elementStatus ==='edit' && !element[rel].needToBeDeliver )"
                     ></mat-checkbox>
                 </span>
             </mat-cell>

@@ -117,11 +117,14 @@ export class ReleaseComponent {
         this.getTaskType();
     }
     onChangeTBDStatus(event, releaseName) {
+        if(this.releaseData[releaseName].needToBeDeliver === false ){
+            this.releaseData[releaseName].delivered = false;
+        }
         if (commonFunctions.containsObject(releaseName, this.releaseData.releases)) {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
                     release['needToBeDeliver'] = event.checked;
-                    release['delivered'] = release.delivered ? release.delivered : false ;
+                    release['delivered'] = false ;
                 }
             })
         }
@@ -135,15 +138,9 @@ export class ReleaseComponent {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
                     release['delivered'] = event.checked;
-                    release['needToBeDeliver'] = release.needToBeDeliver ? release.needToBeDeliver : false ;
                 }
             })
         }
-        else {
-            let release = { name: releaseName, delivered: event.checked, needToBeDeliver: false }
-            this.releaseData.releases.push(release);
-        }
-        console.log("==this",this.releaseData);
     }
     onSubmitNew() {
         let releaseData = { id:this.releaseData.id, name: this.releaseData.name, label:this.releaseData.label, releases:this.releaseData.releases };
