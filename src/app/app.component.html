@@ -1,6 +1,6 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <router-outlet></router-outlet>
-<div *ngIf="isReleaseCalendarPage">
+<div *ngIf=" !releaseService.page || releaseService.page === 'releasecalendar' ">
   <h2>Release Calendar</h2>
   <div style="text-align:center">
     <div class="example-container mat-elevation-z8">
@@ -84,7 +84,7 @@
       </mat-table>
     </div>
   </div>
-  <div class="example-container">
+  <div class="example-container" *ngIf="releaseService.page === 'releasecalendar'">
     <table class="example-full-width" cellspacing="0">
       <tr class="space"></tr>
       <tr *ngIf="isNewRelease">

@@ -8,6 +8,7 @@ const options = new RequestOptions({ headers: headers });
 @Injectable()
 export class ReleaseService {
     tpgName: string = '';
+    page: any = null
     constructor( private http: Http ) {}
     getBaseURL(): string{
         return config.baseUrl+'/calendar/cpm';

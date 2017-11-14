@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialog } from './component/confirm-dialog/confirmDialog.component';
-import { config } from './constant/constant';
+import { config, commonFunctions } from './constant/constant';
 import 'rxjs/add/observable/of';
 
 const baseUrl = 'release/';
@@ -15,26 +15,28 @@ const baseUrl = 'release/';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ReleaseService]
 })
 
 export class AppComponent implements OnInit {
   title = 'app';
   relCalendar: any = [];
   release: any = { id: '', releaseDrop: "", deliveryType: "", label: "", actDate: "", planDate: "", status: "", version: "" }
-  displayedColumns = ['releaseDrop', 'deliveryType', 'label', 'actDate', 'planDate', 'version', 'status', 'id'];
+  displayedColumns = ['releaseDrop', 'deliveryType', 'label', 'actDate', 'planDate', 'version', 'status'];
   releaseStatus = [{ value: "pending", viewValue: "PENDING" }, { value: "done", viewValue: "DONE" }]
   dropList: any = [];
   deliveryList: any = [];
   loading: boolean = false;
   isNewRelease: boolean = false;
-  isReleaseCalendarPage: boolean = false;
   constructor(
     private releaseService: ReleaseService,
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     public dialog: MatDialog) {
-    this.isReleaseCalendarPage = config.getParameterByName('page', undefined) === 'releasecalendar';
+    let pageType = config.getParameterByName('page', undefined);
+    if (pageType === config.releasecontentURL || pageType === config.releasecalendarURL)
+      this.releaseService.page = pageType;
+    else
+      this.releaseService.page = null;
     iconRegistry.addSvgIcon(
       'clear',
       sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_clear_black_24px.svg'));
@@ -44,6 +46,8 @@ export class AppComponent implements OnInit {
   }
   getRelCalendar(): void {
     this.loading = false;
+    if (this.releaseService.page === config.releasecalendarURL && !commonFunctions.isInArray(this.displayedColumns,'id'))
+      this.displayedColumns.push('id');
     this.releaseService.getHeroes().then(relCalendar => {
       this.relCalendar = new ExampleDataSource(JSON.parse(relCalendar._body))
       this.loading = true;
@@ -98,7 +102,7 @@ export class AppComponent implements OnInit {
           this.isNewRelease = !this.isNewRelease;
           this.getRelCalendar();
         })
-        .catch(error=>{
+        .catch(error => {
           let message = JSON.parse(error._body).Message;
           this.errorDialog(message);
         })
@@ -109,10 +113,10 @@ export class AppComponent implements OnInit {
           this.isNewRelease = !this.isNewRelease;
           this.getRelCalendar();
         })
-        .catch(error=>{
+        .catch(error => {
           let message = JSON.parse(error._body).Message;
           this.errorDialog(message);
-      })
+        })
     }
 
   }
@@ -147,20 +151,20 @@ export class AppComponent implements OnInit {
         this.deleteRelease(result.id);
     });
   }
-  errorDialog(message){
+  errorDialog(message) {
     let dialogRef = this.dialog.open(ConfirmDialog, {
-        width: '500px',
-        data: { 
-            header:" ",
-            info:message ? message: "error",
-            type:"error"
-        }
+      width: '500px',
+      data: {
+        header: " ",
+        info: message ? message : "error",
+        type: "error"
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-        console.log("===this.error",result);
+      console.log("===this.error", result);
     });
-}
+  }
 }
 
 class ExampleDataSource extends DataSource<any> {

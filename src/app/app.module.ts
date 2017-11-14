@@ -17,6 +17,7 @@ import { AppComponent } from './app.component';
 import { ConfirmDialog } from './component/confirm-dialog/confirmDialog.component'
 import { ReleaseComponent } from './component/release/release.component'
 import { AppRoutingModule } from './app-router.module';
+import { ReleaseService } from './services/release.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import { AppRoutingModule } from './app-router.module';
     MatIconModule,
     MatDialogModule
   ],
-  providers: [],
+  providers: [ReleaseService],
   bootstrap: [AppComponent],
   entryComponents:[ ConfirmDialog ]
 })

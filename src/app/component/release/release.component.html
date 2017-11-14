@@ -1,4 +1,4 @@
-<div *ngIf="isRelease">
+<div *ngIf=" !releaseService.page || releaseService.page === 'releasecontent' ">
     <h2>Release Content</h2>
     <mat-table #table [dataSource]="releaseDataList" *ngIf="loading">
         <ng-container matColumnDef="name">

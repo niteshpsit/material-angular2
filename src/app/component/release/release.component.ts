@@ -17,7 +17,7 @@ const baseUrl = '';
     styleUrls: ['./release.component.css'],
 })
 export class ReleaseComponent {
-    isRelease: boolean = false;
+    page: string = 'releasecontent';
     loading: boolean = false;
     taskTypeList: string[] = [];
     releaseList: string[] = [];
@@ -39,7 +39,11 @@ export class ReleaseComponent {
         iconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
         public dialog: MatDialog) {
-        this.isRelease = config.getParameterByName('page', undefined) === 'release';
+        let pageType = config.getParameterByName('page', undefined);
+        if(pageType === config.releasecontentURL || pageType === config.releasecalendarURL)
+            this.releaseService.page = pageType;
+        else
+            this.releaseService.page = null;
         iconRegistry.addSvgIcon(
             'clear',
             sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_clear_black_24px.svg'));
@@ -67,9 +71,10 @@ export class ReleaseComponent {
                 });
                 this.tableData.push(tableColumn);
             })
-            this.tableData.push(this.releaseData);
-            // This is for last column
-            this.displayedColumns.push("id");
+            if(this.releaseService.page === config.releasecontentURL){
+                this.tableData.push(this.releaseData);
+                this.displayedColumns.push("id");
+            }
             this.releaseDataList = new ExampleDataSource(this.tableData);
             this.loading = true;
             
