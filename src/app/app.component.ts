@@ -45,10 +45,11 @@ export class AppComponent implements OnInit {
   }
   getRelCalendar(): void {
     this.loading = false;
-    if (this.releaseService.page === config.releasecalendarURL && !commonFunctions.isInArray(this.displayedColumns,'id'))
+    if (this.releaseService.page === config.releasecalendarURL && !commonFunctions.isInArray(this.displayedColumns, 'id'))
       this.displayedColumns.push('id');
     this.releaseService.getHeroes().then(relCalendar => {
-      this.relCalendar = new ExampleDataSource(JSON.parse(relCalendar._body))
+      let tableData = commonFunctions.getValidResponse(relCalendar);
+      this.relCalendar = new ExampleDataSource(tableData);
       this.loading = true;
     }
     );
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit {
 
     this.releaseService.getDropList()
       .then((res: any) => {
-        let data = JSON.parse(res._body);
+        let data = commonFunctions.getValidResponse(res);
         data.forEach((drop) => {
           this.dropList.push({ value: drop.delivery, viewValue: drop.delivery })
         });
@@ -66,7 +67,7 @@ export class AppComponent implements OnInit {
   getDeliveryList() {
     this.releaseService.getReleaseTypes()
       .then((res: any) => {
-        let data = JSON.parse(res._body);
+        let data = commonFunctions.getValidResponse(res);
         data.forEach((type) => {
           this.deliveryList.push({ value: type.releaseType, viewValue: type.releaseType })
         });
@@ -102,7 +103,7 @@ export class AppComponent implements OnInit {
           this.getRelCalendar();
         })
         .catch(error => {
-          let message = JSON.parse(error._body).Message;
+          let message = commonFunctions.getValidErrorMessage(error);
           this.errorDialog(message);
         })
     } else {
@@ -113,7 +114,7 @@ export class AppComponent implements OnInit {
           this.getRelCalendar();
         })
         .catch(error => {
-          let message = JSON.parse(error._body).Message;
+          let message = commonFunctions.getValidErrorMessage(error);
           this.errorDialog(message);
         })
     }
@@ -137,6 +138,8 @@ export class AppComponent implements OnInit {
     this.isNewRelease = true;
   }
   isValidRelease() {
+    if (this.release.id && this.release.id !== "" && this.release.status === "done")
+      return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version && this.release.actDate ?  true : false;
     return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version ? true : false;
   }
   openDialog(id): void {
@@ -150,15 +153,15 @@ export class AppComponent implements OnInit {
         this.deleteRelease(result.id);
     });
   }
-  gotoEditReleaseCalendarPage(){
+  gotoEditReleaseCalendarPage() {
     let url = `${config.baseFolderURL}?page=${config.releasecalendarURL}`;
     window.location.href = url
-}
+  }
   errorDialog(message) {
     let dialogRef = this.dialog.open(ConfirmDialog, {
       width: '500px',
       data: {
-        header: " ",
+        header: "Error:",
         info: message ? message : "error",
         type: "error"
       }

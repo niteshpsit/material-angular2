@@ -128,7 +128,7 @@
         </td>
         <td *ngIf="release.id && release.id !== ''">
           <mat-form-field>
-            <input matInput [matDatepicker]="actDate" placeholder="Actual Date" [(ngModel)]="release.actDate">
+            <input matInput [min]="startDate" [matDatepicker]="actDate" placeholder="Actual Date" [(ngModel)]="release.actDate">
             <mat-datepicker-toggle matSuffix [for]="actDate"></mat-datepicker-toggle>
             <mat-datepicker #actDate></mat-datepicker>
           </mat-form-field>
