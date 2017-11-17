@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialog } from './component/confirm-dialog/confirmDialog.component';
-import { config, commonFunctions } from './constant/constant';
+import { config, commonFunctions } from './constant/myConstant';
 import 'rxjs/add/observable/of';
 
 @Component({
@@ -121,17 +121,19 @@ export class AppComponent implements OnInit {
 
   }
   deleteRelease(id) {
+    console.log("id",id);
     this.releaseService.deleteRelease(id)
       .then((data) => {
         this.getRelCalendar();
+        this.resetReleaase();
       })
   }
   editRelease(ele) {
-    this.release.id = ele.id;
+    this.release.id = ele._id;
     this.release.releaseDrop = ele.releaseDrop
     this.release.deliveryType = ele.deliveryType
     this.release.label = ele.label
-    this.release.actDate = (ele.id && ele.actDate) ? new Date(ele.actDate).toISOString() : '';
+    this.release.actDate = (ele._id && ele.actDate) ? new Date(ele.actDate).toISOString() : '';
     this.release.planDate = new Date(ele.planDate).toISOString()
     this.release.version = ele.version
     this.release.status = ele.status;
@@ -142,15 +144,15 @@ export class AppComponent implements OnInit {
       return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version && this.release.actDate ?  true : false;
     return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version ? true : false;
   }
-  openDialog(id): void {
+  openDialog(release): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
       width: '500px',
-      data: { id: id ? id : undefined }
+      data: {   id: ( release && release._id ) ? release._id : undefined }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.id)
-        this.deleteRelease(result.id);
+        this.deleteRelease(release);
     });
   }
   gotoEditReleaseCalendarPage() {

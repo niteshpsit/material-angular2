@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialog } from '../confirm-dialog/confirmDialog.component';
-import { config, commonFunctions } from '../../constant/constant';
+import { config, commonFunctions } from '../../constant/myConstant';
 import 'rxjs/add/observable/of';
 
 //const baseUrl = 'release/';

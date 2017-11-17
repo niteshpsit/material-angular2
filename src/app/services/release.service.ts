@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
-import { config } from'../constant/constant';
+import { config } from'../constant/myConstant';
 const headers = new Headers({ 'Content-Type': 'application/json' });
 const options = new RequestOptions({ headers: headers });
 
@@ -11,7 +11,8 @@ export class ReleaseService {
     page: any = null
     constructor( private http: Http ) {}
     getBaseURL(): string{
-        return config.baseUrl+'/calendar/cpm';
+        //return config.baseUrl+'/calendar/cpm';
+        return config.baseUrl;
     }
     getHeroes(): any {
         let url = this.getBaseURL() + config.getReleaseCalendarURL;
@@ -38,12 +39,13 @@ export class ReleaseService {
             delete release.actDate;
         if( !release.status || release.status === "" )
             delete release.status;
-        return this.http.post(url, release, options).toPromise()
+        //return this.http.post(url, release, options).toPromise()
+        return this.http.put(url, release, options).toPromise()
     }
-    deleteRelease(id){
+    deleteRelease(release){
         let url = this.getBaseURL() + config.deleteURL;
-        url = url + id;
-        return this.http.post(url,null, options).toPromise()
+        //url = url + id;
+        return this.http.post(url,release, options).toPromise()
     }
     getReleaseData(): Promise<any> {
         let url = this.getBaseURL() + config.releaseDataURL;
