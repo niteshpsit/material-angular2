@@ -155,11 +155,12 @@ export class ReleaseService {
     }
     updateReleaseData(release){
         let url = this.getBaseURL() + config.updateReleaseDataURL;
-        return this.http.post(url, release, options).toPromise()
+        //return this.http.post(url, release, options).toPromise()
+        return this.http.put(url, release, options).toPromise()
     }
     deleteReleaseContent(id){
         let url = this.getBaseURL() + config.deleteContentURL;
-        url = `${url}?id=${id}`
-        return this.http.post(url,null, options).toPromise()
+        //url = `${url}?id=${id}`
+        return this.http.post(url,{_id:id}, options).toPromise()
     }
 }

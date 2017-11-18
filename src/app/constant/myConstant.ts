@@ -12,12 +12,12 @@ export const config = {
     dropURL:'/config/drop',
     deleteURL:'/calendar/delete',
     updateReleaseURL:'/calendar',
-    releaseURL:'/fetchLabel',
-    releaseDataURL:'/getTqa',
-    addReleaseDataURL: '/addTqa',
-    updateReleaseDataURL:'/updateTqa',
-    deleteContentURL:'/deleteTqa',
-    taskType: '/taskType',
+    releaseURL:'/config/releases',
+    releaseDataURL:'/content',
+    addReleaseDataURL: '/content',
+    updateReleaseDataURL:'/content',
+    deleteContentURL:'/content/delete',
+    taskType: '/config/taskType',
     getParameterByName: function(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");

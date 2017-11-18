@@ -61,9 +61,9 @@ export class ReleaseComponent {
             this.tableData = [];
             releaseDataInfo = commonFunctions.getValidResponse(releaList);
             releaseDataInfo.forEach(releaseData => {
-                let tableColumn = { name: releaseData.name, label: releaseData.label, id: releaseData.id, releases: releaseData.releases }
+                let tableColumn = { name: releaseData.name, label: releaseData.label, id: releaseData._id, releases: releaseData.releases }
                 releaseData.releases.forEach(release => {
-                    tableColumn[release.name] = { needToBeDeliver: release.needToBeDeliver, delivered: release.delivered };
+                    tableColumn[release.name] = { needToBeDeliver: release.needToBeDeliver, delivered: release.delivered ? true : false };
                     // if(!commonFunctions.isInArray(this.displayedColumns,release.name)){
                     //     this.releaseData[release.name] = { needToBeDeliver: false, delivered: false }
                     //     this.releaseList.push(release.name);
