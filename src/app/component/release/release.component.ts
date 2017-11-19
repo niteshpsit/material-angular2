@@ -54,9 +54,10 @@ export class ReleaseComponent {
     }
     getReleaseData(): void {
         //this.releaseDataList = undefined;
+        console.log("list",this.releaseList)
         this.loading = false;
         this.displayedColumns = ['name', 'label', ...this.releaseList];
-        this.releaseService.getReleaseData().then(releaList => {
+        this.releaseService.getReleaseData(this.releaseList.toString()).then(releaList => {
             let releaseDataInfo;
             this.tableData = [];
             releaseDataInfo = commonFunctions.getValidResponse(releaList);

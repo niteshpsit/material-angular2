@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Headers, RequestOptions } from '@angular/http';
+import { Headers, RequestOptions,  URLSearchParams } from '@angular/http';
 import { config } from'../constant/myConstant';
 const headers = new Headers({ 'Content-Type': 'application/json' });
 const options = new RequestOptions({ headers: headers });
@@ -47,9 +47,11 @@ export class ReleaseService {
         //url = url + id;
         return this.http.post(url,release, options).toPromise()
     }
-    getReleaseData(): Promise<any> {
+    getReleaseData(releaseList): Promise<any> {
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('releaseList', releaseList);
         let url = this.getBaseURL() + config.releaseDataURL;
-        return this.http.get(url).toPromise()
+        return this.http.get(url,{search:params}).toPromise()
         // return new Promise((resolve, reject)=>{
         //     resolve(
         //         [{
