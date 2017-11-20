@@ -17,3 +17,11 @@
 .SLIP.mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background{
     background-color:red;
 }
+
+.SLIP.mat-checkbox-disabled:not(.mat-checkbox-checked) .mat-checkbox-frame{
+    background-color:red;
+}
+
+.MISSED.mat-checkbox-disabled:not(.mat-checkbox-checked) .mat-checkbox-frame{
+    background-color:red;
+}

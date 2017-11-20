@@ -15,7 +15,10 @@
                             {{element.name}}
                         </div>
                         <mat-form-field *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'">
-                            <mat-select placeholder="Select Type" [(ngModel)]="releaseData.name">
+                            <mat-select 
+                                placeholder="Select Type"
+                                [(ngModel)]="releaseData.name"
+                                [disabled]="element.elementStatus ==='edit'">
                                 <mat-option *ngFor="let type of taskTypeList" [value]="type">
                                     {{ type }}
                                 </mat-option>
@@ -34,7 +37,11 @@
                             {{element.label }}
                         </div>
                         <mat-form-field *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'">
-                            <input matInput placeholder="Label" [(ngModel)]="releaseData.label">
+                            <input 
+                                matInput placeholder="Label"
+                                [(ngModel)]="releaseData.label"
+                                [disabled]="element.elementStatus ==='edit'"
+                                >
                         </mat-form-field>
                     </mat-cell>
                 </ng-container>
@@ -80,7 +87,7 @@
                     <mat-cell *matCellDef="let element">
                         <div *ngIf="element && element.id && element.id !== '' && !element.elementStatus">
                             <mat-icon svgIcon="edit" class="cursorclass" (click)="editRelease(element)"></mat-icon>
-                            <mat-icon svgIcon="clear" class="cursorclass" (click)="confirmDialog(element.id)"></mat-icon>
+                            <mat-icon svgIcon="clear" class="cursorclass" (click)="confirmDialog(element)"></mat-icon>
                         </div>
                         <button *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'" class="floatright" mat-raised-button color="primary"
                             (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> {{ element.elementStatus ==='new' ? 'CREATE' : 'SUBMIT'}} </button>

@@ -149,15 +149,19 @@ export class ReleaseService {
     addReleaseData(release){
         let url = this.getBaseURL() + config.addReleaseDataURL;
         delete release.id;
+        release.force = false;
         return this.http.post(url, release, options).toPromise()
     }
     updateReleaseData(release){
-        let url = this.getBaseURL() + config.updateReleaseDataURL;
+        delete release.id;
+        let url = this.getBaseURL() + config.addReleaseDataURL;
         return this.http.post(url, release, options).toPromise()
     }
-    deleteReleaseContent(id){
+    deleteReleaseContent(element){
+        console.log("===elene",element);
+        delete element.id;
         let url = this.getBaseURL() + config.deleteContentURL;
-        url = `${url}?id=${id}`
-        return this.http.post(url,null, options).toPromise()
+        console.log("==",url);
+        return this.http.post(url,element, options).toPromise()
     }
 }

@@ -60,8 +60,8 @@ export class ReleaseComponent {
             let releaseDataInfo;
             this.tableData = [];
             releaseDataInfo = commonFunctions.getValidResponse(releaList);
-            releaseDataInfo.forEach(releaseData => {
-                let tableColumn = { name: releaseData.name, label: releaseData.label, id: releaseData.id, releases: releaseData.releases }
+            releaseDataInfo.forEach((releaseData,i) => {
+                let tableColumn = { name: releaseData.name, label: releaseData.label, id: i+1, releases: releaseData.releases }
                 releaseData.releases.forEach(release => {
                     tableColumn[release.name] = { needToBeDeliver: release.needToBeDeliver, delivered: release.delivered };
                     // if(!commonFunctions.isInArray(this.displayedColumns,release.name)){
@@ -167,20 +167,19 @@ export class ReleaseComponent {
             })
     }
     updateReleaseData(release) {
+        //this.releaseData['1747EP03'].validation = 'SLIP';
         this.releaseService.updateReleaseData(release)
             .then((data) => {
                 this.getReleases();
             })
             .catch(error => {
                 let response = commonFunctions.getValidResponse(error);
-                console.log("===neupdate", response);
                 if (response.validation && response.result) {
                     let message = "Need Comfirmation: "
                     for(let key in response.result){
-                        console.log("====ee",this.releaseData)
                         if(this.releaseData[key]){
                             this.releaseData[key].validation = response.result[key];
-                            message = message + `${key} : ${response.result[key]}`
+                            message = message + `${key}: ${response.result[key]}, `
                         }
                     }
                     this.confirmDialog(undefined, response, message);
@@ -223,17 +222,17 @@ export class ReleaseComponent {
         this.tableData[this.tableData.length - 1] = this.releaseData;
         this.releaseDataList = new ExampleDataSource(this.tableData);
     }
-    deleteRelease(id) {
-        this.releaseService.deleteReleaseContent(id)
-            .then((data) => {
-                this.getReleases();
-            })
+    deleteRelease(element) {
+        this.releaseService.deleteReleaseContent(element)
+        .then((data) => {
+            this.getReleases();
+        })
     }
-    confirmDialog(id = undefined, res = undefined, msg = ""): void {
+    confirmDialog(element = undefined, res = undefined, msg = ""): void {
         let dialogRef = this.dialog.open(ConfirmDialog, {
             width: '500px',
             data: {
-                id: id ? id : undefined,
+                id: element && element.id ? element.id : undefined,
                 info: msg ? msg : undefined,
                 type: (res && res.validation) ? "error" : undefined,
                 validation: (res && res.validation) ? res.validation : false
@@ -242,7 +241,7 @@ export class ReleaseComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.id)
-                this.deleteRelease(result.id);
+                this.deleteRelease(element);
             if (result && result.validation) {
                 let releaseData = this.getUpdatedReleaseData();
                 releaseData['force'] = true;

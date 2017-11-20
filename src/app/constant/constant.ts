@@ -1,7 +1,8 @@
 
 export const config = {
     //baseUrl:'http://136.225.202.95:8080',
-    baseUrl: 'http://136.225.202.204:8080',
+    //baseUrl: 'http://136.225.202.204:8080',
+    baseUrl: 'http://136.225.202.95:8080',
     //baseFolderURL:'release/',
     baseFolderURL:'/',
     releasecontentURL:'releasecontent',
