@@ -2,7 +2,7 @@
 <router-outlet></router-outlet>
 <div *ngIf=" !releaseService.page || releaseService.page === 'releasecalendar' ">
   <h2>Release Calendar
-      <mat-icon svgIcon="edit" *ngIf="!releaseService.page" class="cursorclass" [ngStyle]="{'background-color': 'blanchedalmond'}" (click)="gotoEditReleaseCalendarPage()"></mat-icon>
+      <!-- <mat-icon svgIcon="edit" *ngIf="!releaseService.page" class="cursorclass" [ngStyle]="{'background-color': 'blanchedalmond'}" (click)="gotoEditReleaseCalendarPage()"></mat-icon> -->
   </h2>
   <div style="text-align:center">
     <div class="example-container mat-elevation-z8">
@@ -102,7 +102,7 @@
         <td>
           <!-- Select Release -->
           <mat-form-field>
-            <mat-select placeholder="Select Release" [(ngModel)]="release.deliveryType">
+            <mat-select placeholder="Select Delivery" [(ngModel)]="release.deliveryType">
               <mat-option *ngFor="let delivery of deliveryList" [value]="delivery.value">
                 {{ delivery.viewValue }}
               </mat-option>
@@ -145,9 +145,10 @@
         </td>
       </tr>
       <tr>
-        <button class="floatright" mat-raised-button color="primary" (click)="onAddNewReleaase($event)"> {{ isNewRelease ?  'Hide' : 'Add New Release' }}</button>
-        <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)"> Reset </button>
-        <button *ngIf="isNewRelease" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> Submit </button>
+        <mat-spinner [diameter]="40" *ngIf="apiInprogress"></mat-spinner>
+        <button *ngIf="!apiInprogress" class="floatright" mat-raised-button color="primary" (click)="onAddNewReleaase($event)"> {{ isNewRelease ?  'Hide' : 'Add New Release' }}</button>
+        <button *ngIf="!apiInprogress && isNewRelease" class="floatright" mat-raised-button color="primary" (click)="resetReleaase($event)"> Reset </button>
+        <button *ngIf="!apiInprogress && isNewRelease" class="floatright" mat-raised-button color="primary" (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> Submit </button>
       </tr>
     </table>
   </div>

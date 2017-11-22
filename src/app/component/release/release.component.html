@@ -1,7 +1,7 @@
 <div *ngIf=" !releaseService.page || releaseService.page === 'releasecontent' ">
     <h2>Release Content
-        <mat-icon svgIcon="edit" *ngIf="!releaseService.page" class="cursorclass" [ngStyle]="{'background-color': 'blanchedalmond'}"
-            (click)="gotoEditReleaseContentPage()"></mat-icon>
+        <!-- <mat-icon svgIcon="edit" *ngIf="!releaseService.page" class="cursorclass" [ngStyle]="{'background-color': 'blanchedalmond'}"
+            (click)="gotoEditReleaseContentPage()"></mat-icon> -->
     </h2>
     <div style="">
         <div class="example-container mat-elevation-z8">
@@ -89,9 +89,11 @@
                             <mat-icon svgIcon="edit" class="cursorclass" (click)="editRelease(element)"></mat-icon>
                             <mat-icon svgIcon="clear" class="cursorclass" (click)="confirmDialog(element)"></mat-icon>
                         </div>
-                        <button *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'" class="floatright" mat-raised-button color="primary"
+                        <mat-spinner [diameter]="40" *ngIf="apiInprogress && ( element.elementStatus ==='new' || element.elementStatus ==='edit') "></mat-spinner>
+                        
+                        <button *ngIf="!apiInprogress && ( element.elementStatus ==='new' || element.elementStatus ==='edit') " class="floatright" mat-raised-button color="primary"
                             (click)="onSubmitNew($event)" [disabled]="!isValidRelease()"> {{ element.elementStatus ==='new' ? 'CREATE' : 'SUBMIT'}} </button>
-                        <button *ngIf="( element.elementStatus ==='new' || element.elementStatus ==='edit' ) && isValidRelease()" class="floatright"
+                        <button *ngIf="!apiInprogress && ( element.elementStatus ==='new' || element.elementStatus ==='edit' ) && isValidRelease()" class="floatright"
                             mat-raised-button color="primary" (click)="resetReleaase($event)" [disabled]="!isValidRelease()"> {{ element.elementStatus ==='new' ? 'RESET' : 'CANCEL'}} </button>
                     </mat-cell>
                 </ng-container>

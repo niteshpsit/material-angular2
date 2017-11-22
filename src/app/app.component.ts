@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
   isNewRelease: boolean = false;
   startDate = new Date();
+  apiInprogress: boolean = false;
   constructor(
     private releaseService: ReleaseService,
     iconRegistry: MatIconRegistry,
@@ -95,30 +96,38 @@ export class AppComponent implements OnInit {
     }
   }
   onSubmitNew() {
+    this.apiInprogress = true;
     if (this.release.id && this.release.id !== "") {
       this.releaseService.updateRelease(this.release)
         .then((data) => {
+          this.setFalseApiCaling();
           this.resetReleaase();
           this.isNewRelease = !this.isNewRelease;
           this.getRelCalendar();
         })
         .catch(error => {
+          this.setFalseApiCaling();
           let message = commonFunctions.getValidErrorMessage(error);
           this.errorDialog(message);
         })
     } else {
       this.releaseService.addRelease(this.release)
         .then((data) => {
+          this.setFalseApiCaling();
           this.resetReleaase();
           this.isNewRelease = !this.isNewRelease;
           this.getRelCalendar();
         })
         .catch(error => {
+          this.setFalseApiCaling();
           let message = commonFunctions.getValidErrorMessage(error);
           this.errorDialog(message);
         })
     }
 
+  }
+  setFalseApiCaling(){
+    this.apiInprogress = false;
   }
   deleteRelease(id) {
     this.releaseService.deleteRelease(id)

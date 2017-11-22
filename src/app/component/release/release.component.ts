@@ -33,6 +33,7 @@ export class ReleaseComponent {
     columnList: string[] = [];
     tableData = [];
     dynamicClass: object = {}
+    apiInprogress: boolean = false;
     constructor(
         private releaseService: ReleaseService,
         iconRegistry: MatIconRegistry,
@@ -145,6 +146,8 @@ export class ReleaseComponent {
         }
     }
     onSubmitNew() {
+        // Enabling Loader for Create and Update
+        this.apiInprogress = true;
         let releaseData = this.getUpdatedReleaseData();
         if (releaseData.id && releaseData.id !== "") {
             releaseData['force'] = false;
@@ -158,8 +161,10 @@ export class ReleaseComponent {
         this.releaseService.addReleaseData(release)
             .then((data) => {
                 this.getReleases();
+                this.setFalseApiCaling()
             })
             .catch(error => {
+                this.setFalseApiCaling()
                 let message = commonFunctions.getValidErrorMessage(error);
                 this.errorDialog(message);
             })
@@ -169,8 +174,10 @@ export class ReleaseComponent {
         this.releaseService.updateReleaseData(release)
             .then((data) => {
                 this.getReleases();
+                this.setFalseApiCaling()
             })
             .catch(error => {
+                this.setFalseApiCaling();
                 let response = commonFunctions.getValidResponse(error);
                 if (response.validation && response.result) {
                     let message = "Need Comfirmation: "
@@ -185,6 +192,10 @@ export class ReleaseComponent {
                 else
                     this.errorDialog(response.message);
             })
+    }
+    // Setting Loader false for create and update
+    setFalseApiCaling(){
+        this.apiInprogress = false;
     }
     resetReleaase() {
         this.releaseData = this.getInitalReleaseData();
