@@ -9,7 +9,8 @@ export class ConfirmDialog {
 displayData = {
     header:"Confirmation",
     info:"Are you sure you want to delete ?",
-    type:"information"
+    type:"information",
+    validation:false
 }
 constructor(
     public dialogRef: MatDialogRef<ConfirmDialog>,
@@ -17,6 +18,7 @@ constructor(
         this.displayData.header = data.header ? data.header : "Confirmation"
         this.displayData.info = data.info ? data.info : "Are you sure you want to delete ?"
         this.displayData.type = data.type ? data.type : "information"
+        this.displayData.validation = data.validation ? true : false;
     }
 
     onNoClick(): void {

@@ -180,13 +180,15 @@ export class ReleaseComponent {
                 this.setFalseApiCaling();
                 let response = commonFunctions.getValidResponse(error);
                 if (response.validation && response.result) {
-                    let message = "Need Comfirmation: "
+                    let message = ""
                     for(let key in response.result){
                         if(this.releaseData[key]){
                             this.releaseData[key].validation = response.result[key];
                             message = message + `${key}: ${response.result[key]}, `
                         }
                     }
+                    message = `${message}
+                    Still Wants To Continue ?`
                     this.confirmDialog(undefined, response, message);
                 }
                 else

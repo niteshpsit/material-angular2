@@ -23,5 +23,5 @@
 }
 
 .MISSED.mat-checkbox-disabled:not(.mat-checkbox-checked) .mat-checkbox-frame{
-    background-color:red;
+    background-color:lightsalmon;
 }
