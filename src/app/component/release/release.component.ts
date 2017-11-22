@@ -9,8 +9,6 @@ import { ConfirmDialog } from '../confirm-dialog/confirmDialog.component';
 import { config, commonFunctions } from '../../constant/constant';
 import 'rxjs/add/observable/of';
 
-//const baseUrl = 'release/';
-const baseUrl = '';
 @Component({
     selector: 'release',
     templateUrl: 'release.component.html',
@@ -47,10 +45,10 @@ export class ReleaseComponent {
             this.releaseService.page = null;
         iconRegistry.addSvgIcon(
             'clear',
-            sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_clear_black_24px.svg'));
+            sanitizer.bypassSecurityTrustResourceUrl(config.baseFolderURL + 'assets/ic_clear_black_24px.svg'));
         iconRegistry.addSvgIcon(
             'edit',
-            sanitizer.bypassSecurityTrustResourceUrl(baseUrl + 'assets/ic_create_black_24px.svg'));
+            sanitizer.bypassSecurityTrustResourceUrl(config.baseFolderURL + 'assets/ic_create_black_24px.svg'));
     }
     getReleaseData(): void {
         //this.releaseDataList = undefined;

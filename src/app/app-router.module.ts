@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReleaseComponent } from './component/release/release.component'
 
 const routes: Routes = [
-    { path: '', component: ReleaseComponent },
-    { path: '**', redirectTo: '/', pathMatch: 'full' },
+    { path: 'release', component: ReleaseComponent },
+    { path: '**', redirectTo: '/release', pathMatch: 'full' },
 ];
 
 @NgModule({
