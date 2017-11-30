@@ -15,35 +15,34 @@ import 'rxjs/add/observable/of';
     styleUrls: ['./release.component.css'],
 })
 export class ReleaseComponent {
-    page: string = 'releasecontent';
-    loading: boolean = false;
-    taskTypeList: string[] = [];
-    releaseList: string[] = [];
-    releaseDataList: any = [];
+    loading: boolean = false;// loading varialbe to table data loading
+    taskTypeList: string[] = []; // List of tasks like BSUC, PBI, TR..
+    releaseList: string[] = []; // List of Dynamic Release for making dynamic columns
+    releaseDataList: any = [];  // Actul Data for table
     releaseData: any = {
         id: "",
         name: '',
         label: "",
         elementStatus: "new",
         releases: []
-    }
-    newLi: string = 'new'
-    data: string = ''
-    displayedColumns: string[] = [];
-    columnList: string[] = [];
-    tableData = [];
-    dynamicClass: object = {}
-    apiInprogress: boolean = false;
+    } // Initial data for new entry , This is data of last row of table
+    displayedColumns: string[] = []; // Column List including dynamic release list and contains 'id' as last value for editing view only
+    tableData = []; // This will cantain table data before making actual data for table
+    apiInprogress: boolean = false; // For loading in case of making new entry or updating old one 
     constructor(
-        private releaseService: ReleaseService,
-        iconRegistry: MatIconRegistry,
+        private releaseService: ReleaseService, // Injecting Release Service 
+        iconRegistry: MatIconRegistry, 
         sanitizer: DomSanitizer,
         public dialog: MatDialog) {
+        /**
+         * This Block check the page type and open accordingly 
+         */
         let pageType = config.getParameterByName('page', undefined);
         if (pageType === config.releasecontentURL || pageType === config.releasecalendarURL)
             this.releaseService.page = pageType;
         else
             this.releaseService.page = null;
+        // To user svg file in our component
         iconRegistry.addSvgIcon(
             'clear',
             sanitizer.bypassSecurityTrustResourceUrl(config.baseFolderURL + 'assets/ic_clear_black_24px.svg'));
@@ -51,16 +50,20 @@ export class ReleaseComponent {
             'edit',
             sanitizer.bypassSecurityTrustResourceUrl(config.baseFolderURL + 'assets/ic_create_black_24px.svg'));
     }
+    /**
+     * to get the release data to display in table
+     */
     getReleaseData(): void {
-        //this.releaseDataList = undefined;
-        this.loading = false;
-        this.displayedColumns = ['name', 'label', ...this.releaseList];
-        this.releaseService.getReleaseData().then(releaList => {
-            let releaseDataInfo;
-            this.tableData = [];
-            releaseDataInfo = commonFunctions.getValidResponse(releaList);
+        this.loading = false;// Setting Loader for display Loader
+        this.displayedColumns = ['name', 'label', ...this.releaseList]; // Making the displayed column List with dynamic data
+        this.releaseService.getReleaseData().then(releaList => { // Serive to get data 
+            let releaseDataInfo; // 
+            this.tableData = []; // Making empaty for insering new data;
+            releaseDataInfo = commonFunctions.getValidResponse(releaList); // get Exact Body response from request data
             releaseDataInfo.forEach((releaseData,i) => {
+                // This is individual row of table
                 let tableColumn = { name: releaseData.name, label: releaseData.label, id: i+1, releases: releaseData.releases }
+                // Making data for dynamic table 
                 releaseData.releases.forEach(release => {
                     tableColumn[release.name] = { needToBeDeliver: release.needToBeDeliver, delivered: release.delivered };
                     // if(!commonFunctions.isInArray(this.displayedColumns,release.name)){
@@ -69,12 +72,15 @@ export class ReleaseComponent {
                     //     this.displayedColumns.push(release.name);
                     // }
                 });
+                // Push individual row in table data
                 this.tableData.push(tableColumn);
             })
+            // Push id ( To display last column for edit and delete permission ) in column list and data ( For create and update persistance )
             if (this.releaseService.page === config.releasecontentURL) {
                 this.tableData.push(this.releaseData);
                 this.displayedColumns.push("id");
             }
+            // Get Actuall data for table
             this.releaseDataList = new ExampleDataSource(this.tableData);
             this.loading = true;
 
