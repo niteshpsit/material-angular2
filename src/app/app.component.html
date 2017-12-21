@@ -31,6 +31,14 @@
         </ng-container>
 
         <!-- Name Column -->
+        <ng-container matColumnDef="rState">
+          <mat-header-cell *matHeaderCellDef>
+            <h2> R-State </h2>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.rState}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
         <ng-container matColumnDef="label">
           <mat-header-cell *matHeaderCellDef>
             <h2> Label </h2>
@@ -111,6 +119,11 @@
         </td>
         <td>
           <mat-form-field>
+            <input matInput placeholder="R-State" [(ngModel)]="release.rState">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
             <input matInput placeholder="Label" [(ngModel)]="release.label">
           </mat-form-field>
         </td>
@@ -130,10 +143,18 @@
           <mat-form-field>
             <input matInput [min]="startDate" [matDatepicker]="actDate" placeholder="Actual Date" [(ngModel)]="release.actDate">
             <mat-datepicker-toggle matSuffix [for]="actDate"></mat-datepicker-toggle>
-            <mat-datepicker #actDate></mat-datepicker>
+            <mat-datepicker #actDate ></mat-datepicker>
           </mat-form-field>
         </td>
-
+        <td *ngIf="release.id && release.id !== ''">
+            <mat-form-field>
+              <mat-select placeholder="Override Slip" [(ngModel)]="release.overrideSlip">
+                <mat-option *ngFor="let status of slipStatus" [value]="status.value">
+                  {{ status.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        </td>
         <td *ngIf="release.id && release.id !== ''">
           <mat-form-field>
             <mat-select placeholder="Status" [(ngModel)]="release.status">

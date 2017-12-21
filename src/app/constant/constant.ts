@@ -28,7 +28,9 @@ export const config = {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
     ERROR:{
-        500:"INTERNAL SEREVER ERROR"
+        500:"INTERNAL SEREVER ERROR",
+        401:"The operation could not completed successfully. Please click on download button to see the discrepancies.",
+        402:"The entries for unplanned release can not be checked."
     }
 }
 

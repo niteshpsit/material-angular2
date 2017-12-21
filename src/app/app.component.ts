@@ -19,8 +19,9 @@ export class AppComponent implements OnInit {
   title = 'app';
   relCalendar: any = [];
   release: any = { id: '', releaseDrop: "", deliveryType: "", label: "", actDate: "", planDate: "", status: "", version: "" }
-  displayedColumns = ['releaseDrop', 'deliveryType', 'label', 'actDate', 'planDate', 'version', 'status'];
+  displayedColumns = ['releaseDrop', 'deliveryType', 'rState', 'label', 'actDate', 'planDate', 'version', 'status'];
   releaseStatus = [{ value: "pending", viewValue: "PENDING" }, { value: "done", viewValue: "DONE" }]
+  slipStatus = [{ value: false, viewValue: "No" }, { value: true, viewValue: "Yes" }]
   dropList: any = [];
   deliveryList: any = [];
   loading: boolean = false;
@@ -88,6 +89,7 @@ export class AppComponent implements OnInit {
       id: "",
       releaseDrop: "",
       deliveryType: "",
+      rState: "",
       label: "",
       actDate: "",
       planDate: "",
@@ -126,7 +128,7 @@ export class AppComponent implements OnInit {
     }
 
   }
-  setFalseApiCaling(){
+  setFalseApiCaling() {
     this.apiInprogress = false;
   }
   deleteRelease(id) {
@@ -139,16 +141,18 @@ export class AppComponent implements OnInit {
     this.release.id = ele.id;
     this.release.releaseDrop = ele.releaseDrop
     this.release.deliveryType = ele.deliveryType
+    this.release.rState = ele.rState
     this.release.label = ele.label
     this.release.actDate = (ele.id && ele.actDate) ? new Date(ele.actDate).toISOString() : '';
     this.release.planDate = new Date(ele.planDate).toISOString()
     this.release.version = ele.version
     this.release.status = ele.status;
+    this.release.overrideSlip = false;
     this.isNewRelease = true;
   }
   isValidRelease() {
     if (this.release.id && this.release.id !== "" && this.release.status === "done")
-      return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version && this.release.actDate ?  true : false;
+      return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version && this.release.actDate ? true : false;
     return this.release.releaseDrop && this.release.deliveryType && this.release.planDate && this.release.version ? true : false;
   }
   openDialog(id): void {
@@ -167,12 +171,18 @@ export class AppComponent implements OnInit {
     window.location.href = url
   }
   errorDialog(message) {
+    let errorMessage = config.ERROR['401'];
+    if (typeof message !== 'object') {
+      errorMessage = message;
+      var error = "error";
+    }
     let dialogRef = this.dialog.open(ConfirmDialog, {
       width: '500px',
       data: {
         header: "Error:",
         info: message ? message : "error",
-        type: "error"
+        type: error ? error : "downloadError",
+        errorMessage: errorMessage
       }
     });
 

@@ -18,17 +18,32 @@
   .example-container > * {
     width: 100%;
   }
+
   .space {
       height: 40px;
   }
 
-  .floatright{
+  .floatright {
     margin-right: 15px;
   }
 
-  .editRow{
+  .editRow {
     background: lightsteelblue;
   }
-  .cursorclass{
+
+  .cursorclass {
     cursor: pointer;
+  }
+
+  .mat-form-field {
+    width: 150px
+  }
+
+  .mat-header-cell, .mat-cell {
+    border-right-color: rgba(0,0,0,.12);
+    border-right-width: 1px;
+    border-right-style: solid;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
   }

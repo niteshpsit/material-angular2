@@ -1,8 +1,11 @@
 <h1 mat-dialog-title>{{displayData.header}}</h1>
 <div mat-dialog-content>
-  <p [ngStyle]="{'color': displayData.type === 'error' ? 'red': '' }">{{displayData.info}}</p>
+  <p *ngIf="displayData.header === 'Confirmation'" [ngStyle]="{'color': displayData.type === 'error' ? 'red': '' }">{{displayData.info}}</p>
+  <p *ngIf="displayData.header === 'Error:'" [ngStyle]="{'color': displayData.type === 'error' || displayData.type === 'downloadError' ? 'red': '' }">{{displayData.errorMessage}}</p>
+  <p *ngIf="displayData.header === ' '" [ngStyle]="{'color': displayData.type === 'error' ? 'red': '' }">{{displayData.info}}</p>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button [mat-dialog-close]="data" color="primary" tabindex="2">Ok</button>
+  <button mat-raised-button (click)="onDownloadClick()" color="primary" tabindex="2" *ngIf="displayData.type === 'downloadError'">Download</button>
   <button mat-button (click)="onNoClick()" color="primary" tabindex="-1" *ngIf="displayData.header === 'Confirmation'">No Thanks</button>
 </div>

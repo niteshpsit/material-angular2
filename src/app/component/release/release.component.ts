@@ -133,14 +133,14 @@ export class ReleaseComponent {
             this.releaseData.releases.forEach(release => {
                 if (release.name === releaseName) {
                     release['needToBeDeliver'] = event.checked;
-                    release['delivered'] = false;
+                    release['delivered'] = false;                  
                 }
             })
         }
         else {
-            let release = { name: releaseName, needToBeDeliver: event.checked, delivered: false }
+            let release = { name: releaseName, needToBeDeliver: event.checked, delivered: false }            
             this.releaseData.releases.push(release);
-        }
+        }           
     }
     onChangeDeliverStatus(event, releaseName) {
         if (commonFunctions.containsObject(releaseName, this.releaseData.releases)) {
@@ -154,14 +154,27 @@ export class ReleaseComponent {
     onSubmitNew() {
         // Enabling Loader for Create and Update
         this.apiInprogress = true;
-        let releaseData = this.getUpdatedReleaseData();
-        if (releaseData.id && releaseData.id !== "") {
-            releaseData['force'] = false;
-            this.updateReleaseData(releaseData);
-        } else {
-            this.createReleaseData(releaseData);
+        let releaseData = this.getUpdatedReleaseData();        
+        if(this.checkReleaseData(releaseData)) {
+            if (releaseData.id && releaseData.id !== "") {
+                releaseData['force'] = false;
+                this.updateReleaseData(releaseData);
+            } else {               
+                releaseData.releases = releaseData.releases.filter(release => release.needToBeDeliver !== false);
+                this.createReleaseData(releaseData);
+            }
         }
-
+    }
+    checkReleaseData(release) {
+        for(let i=0;i<release.releases.length;i++) {
+            if(release.releases[i].name.indexOf('UNPLAN') !== -1 && release.releases[i].needToBeDeliver === true ){
+                this.setFalseApiCaling()
+                let message = config.ERROR['402'];
+                this.errorDialog(message);
+                return false;               
+            }
+        }
+        return true;      
     }
     createReleaseData(release) {
         this.releaseService.addReleaseData(release)
@@ -238,6 +251,7 @@ export class ReleaseComponent {
         this.releaseData.elementStatus = "edit";
         this.tableData[this.tableData.length - 1] = this.releaseData;
         this.releaseDataList = new ExampleDataSource(this.tableData);
+        window.scrollTo(0,document.body.scrollHeight);
     }
     deleteRelease(element) {
         this.releaseService.deleteReleaseContent(element)
