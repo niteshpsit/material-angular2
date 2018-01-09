@@ -24,7 +24,7 @@
   }
 
   .floatright {
-    margin-right: 15px;
+    margin-right: 5px;
   }
 
   .editRow {
@@ -46,4 +46,16 @@
     height: 48px;
     line-height: 48px;
     text-align: center;
+  }
+
+  .mat-raised-button{
+    min-width:61px !important;
+  }
+
+  .doneRow{
+    background: green;
+  }
+
+  .doneRow .mat-cell{
+    color:white;
   }

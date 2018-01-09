@@ -128,6 +128,11 @@ export class AppComponent implements OnInit {
     }
 
   }
+  onChangeStatus(event){
+    if(event.value === 'pending'){
+      this.release.actDate = "";
+    }
+  }
   setFalseApiCaling() {
     this.apiInprogress = false;
   }

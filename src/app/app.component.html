@@ -75,7 +75,7 @@
           <mat-header-cell *matHeaderCellDef>
             <h2> Status </h2>
           </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.status === "pending" ? "Pending" : "Done"}} </mat-cell>
         </ng-container>
 
         <!-- Color Column -->
@@ -90,7 +90,7 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="row.id === release.id ? 'editRow' : ''"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="row.status === 'done' ? 'doneRow' : ''" [ngClass]="row.id === release.id ? 'editRow' : ''"></mat-row>
       </mat-table>
     </div>
   </div>
@@ -157,7 +157,7 @@
         </td>
         <td *ngIf="release.id && release.id !== ''">
           <mat-form-field>
-            <mat-select placeholder="Status" [(ngModel)]="release.status">
+            <mat-select (change)="onChangeStatus($event)" placeholder="Status" [(ngModel)]="release.status">
               <mat-option *ngFor="let status of releaseStatus" [value]="status.value">
                 {{ status.viewValue }}
               </mat-option>

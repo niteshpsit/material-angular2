@@ -15,7 +15,7 @@
                             {{element.name}}
                         </div>
                         <mat-form-field *ngIf="element.elementStatus ==='new' || element.elementStatus ==='edit'">
-                            <mat-select 
+                            <mat-select (click)="addClass()"
                                 placeholder="Select Type"
                                 [(ngModel)]="releaseData.name"
                                 [disabled]="element.elementStatus ==='edit'">
@@ -45,14 +45,19 @@
                         </mat-form-field>
                     </mat-cell>
                 </ng-container>
-
+                
                 <ng-container *ngFor="let rel of releaseList" [matColumnDef]="rel">
                     <mat-header-cell *matHeaderCellDef>
-                        <h2> {{ (rel.indexOf('UNPLAN') !== -1) ? "Unplanned" : rel}} </h2>
-                        <div *ngIf="rel.indexOf('UNPLAN') === -1"> <span> <b>Planed</b> </span><span><b>Delivered</b></span> </div>
+                        <h2 *ngIf="rel.indexOf('UNPLAN') === -1"> {{rel}} </h2>
+                        <h2 *ngIf="rel.indexOf('UNPLAN') !== -1"> <a title="Click here to download unplanned entries" (click)="getUnplanned()">Unplanned</a></h2>
+                        
+                        
+                        <div *ngIf="rel.indexOf('UNPLAN') === -1"> <span> <b>Planned</b>&nbsp;&nbsp;&nbsp;</span><span><b>Delivered</b></span> </div>
+                        <div *ngIf="rel.indexOf('UNPLAN') !== -1"> <b><a style="color:red;font-size:16px;cursor:pointer;" title="Click here to download unplanned entries" (click)="getUnplanned()">(Download)</a></b> </div>
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
                         <span *ngIf="element[rel] && element.id && element.id !== '' && !element.elementStatus">
+                            
                         <mat-checkbox
                             [ngClass]="(rel.indexOf('UNPLAN') !== -1) ? 'unplannedClass' : ''"
                             [(ngModel)]="element[rel].needToBeDeliver"

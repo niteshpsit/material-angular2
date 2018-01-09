@@ -10,6 +10,10 @@
     background-color: green;
 }
 
+.otherClass {
+    bottom: 0px !important;
+}
+
 .MISSED.mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background{
     background-color:lightsalmon
 }

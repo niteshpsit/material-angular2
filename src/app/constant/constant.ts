@@ -18,6 +18,7 @@ export const config = {
     updateReleaseDataURL:'/updateTqa',
     deleteContentURL:'/deleteTqa',
     taskType: '/taskType',
+    unplanURL: '/unplan',
     getParameterByName: function(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
@@ -79,5 +80,27 @@ export const commonFunctions = {
         } catch (e) {
             return false;
         }
+    },
+    download(info, fileName){
+        var csvData = this.ConvertToCSV(info);
+        var a = document.createElement("a");
+        a.setAttribute('style', 'display:none;');
+        document.body.appendChild(a);
+        var blob = new Blob([csvData], { type: 'text/csv' });
+        var url= window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = fileName + new Date().toISOString().slice(0, 10) + '.csv';
+        a.click();
+    },
+    ConvertToCSV(objArray) {
+        var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+        var str = 'Type,Status';
+        str += '\r\n';
+        for (var key in array) {
+            var line = '';
+            line = key + ',' + array[key];
+            str += line + '\r\n';
+        }
+        return str;
     }
 }

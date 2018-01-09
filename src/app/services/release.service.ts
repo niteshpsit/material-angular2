@@ -34,8 +34,8 @@ export class ReleaseService {
     }
     updateRelease(release: any){
         let url = this.getBaseURL() + config.updateReleaseURL;
-        if( !release.actDate || release.actDate === "" || release.actDate === null ) 
-            delete release.actDate;
+        /*if( !release.actDate || release.actDate === "" || release.actDate === null ) 
+            delete release.actDate;*/
         if( !release.status || release.status === "" )
             delete release.status;
         return this.http.post(url, release, options).toPromise()
@@ -138,6 +138,10 @@ export class ReleaseService {
         // return new Promise((resolve, reject)=>{
         //     resolve(['1747','1750','1747EP01','1747 REPACK'])
         // })
+    }
+    getUnplanned():Promise<any>{
+        let url = this.getBaseURL() + config.unplanURL;
+        return this.http.get(url).toPromise();        
     }
     getTaskType():Promise<any>{
         let url = this.getBaseURL() + config.taskType;

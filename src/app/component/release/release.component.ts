@@ -74,7 +74,7 @@ export class ReleaseComponent {
                 });
                 // Push individual row in table data
                 this.tableData.push(tableColumn);
-            })
+            })          
             // Push id ( To display last column for edit and delete permission ) in column list and data ( For create and update persistance )
             if (this.releaseService.page === config.releasecontentURL) {
                 this.tableData.push(this.releaseData);
@@ -154,13 +154,16 @@ export class ReleaseComponent {
     onSubmitNew() {
         // Enabling Loader for Create and Update
         this.apiInprogress = true;
-        let releaseData = this.getUpdatedReleaseData();        
+        let releaseData = this.getUpdatedReleaseData();     
         if(this.checkReleaseData(releaseData)) {
             if (releaseData.id && releaseData.id !== "") {
                 releaseData['force'] = false;
                 this.updateReleaseData(releaseData);
             } else {               
                 releaseData.releases = releaseData.releases.filter(release => release.needToBeDeliver !== false);
+                if(Object.keys(releaseData.releases).length <= 0){
+                    releaseData.releases = [{ needToBeDeliver: false, name:'9999 UNPLAN 01', delivered: false }];
+                }
                 this.createReleaseData(releaseData);
             }
         }
@@ -191,7 +194,7 @@ export class ReleaseComponent {
     updateReleaseData(release) {
         //this.releaseData['1747EP03'].validation = 'SLIP';
         this.releaseService.updateReleaseData(release)
-            .then((data) => {
+            .then((data) => {                
                 this.getReleases();
                 this.setFalseApiCaling()
             })
@@ -238,7 +241,7 @@ export class ReleaseComponent {
         this.releaseData.releases = [];
         newObject.releases.forEach(releases => {
             this.releaseData.releases.push({ ...releases })
-        });
+        });        
         this.releaseList.forEach((column) => {
             if (newObject[column]) {
                 // Validation key for dynamic class for validation 
@@ -257,6 +260,13 @@ export class ReleaseComponent {
         this.releaseService.deleteReleaseContent(element)
         .then((data) => {
             this.getReleases();
+        })
+    }
+    getUnplanned(){
+        this.releaseService.getUnplanned()
+        .then((data) => {            
+            let message = commonFunctions.getValidErrorMessage(data);
+            commonFunctions.download(message, 'Unplanned-TR-');
         })
     }
     confirmDialog(element = undefined, res = undefined, msg = ""): void {
@@ -279,6 +289,10 @@ export class ReleaseComponent {
                 this.updateReleaseData(releaseData);
             }
         });
+    }
+    addClass(){
+        var element = document.getElementById("cdk-overlay-0");
+        element.classList.add("otherClass");
     }
     gotoEditReleaseContentPage() {
         let url = `${config.baseFolderURL}?page=${config.releasecontentURL}`;
